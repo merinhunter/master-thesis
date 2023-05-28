@@ -44,7 +44,19 @@ Django\index{Django} sigue los principios de modularidad que caracterizan a Pyth
 
 \subsection{Django REST Framework}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+Django\index{Django} REST Framework (DRF) es un módulo para Django que amplía las características de este, y que facilita la creación de APIs REST manteniendo todas las ventajas de Django. \emph{\parencite{Reference7}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Figures/drf-logo}
+    \decoRule
+    \caption[DRF (Logo)]{Logo de DRF \emph{\parencite{Reference8}}}
+    \label{fig:drf-logo}
+\end{figure}
+
+A diferencia del \emph{framework} original, DRF se centra principalmente en la parte \emph{backend} que compone una aplicación web. Para ello, ofrece al usuario muchas más opciones para serializar la entrada y salida de datos, además de ampliar las conocidas \emph{Generic Views} de Django con mejoras relacionadas con la construcción de APIs. \emph{\parencite{Reference7}}
+
+Permite además interaccionar fácilmente con la API construida a través de una interfaz web básica, y es capaz de generar documentación dinámica para la API siguiendo la especificación de OpenAPI\footnote{\url{https://spec.openapis.org/oas/v3.1.0}}. \emph{\parencite{Reference7}}
 
 \subsection{Gunicorn}
 
