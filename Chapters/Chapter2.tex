@@ -8,7 +8,7 @@
 
 \section{Python\index{Python}}
 
-Python\index{Python} es un lenguaje de programación orientada a objetos de alto nivel. Fue desarrollado originalmente por Guido van Rossum en el final de la década de 1980, y actualmente es gestionado por la \emph{Python Software Foundation} bajo una licencia \emph{open source} propia conocida como PSFL (\emph{Python Software Foundation License}). \emph{\parencite{Reference1}}
+Python\index{Python} es un lenguaje de programación orientada a objetos de alto nivel. Fue desarrollado originalmente por Guido van Rossum en el final de la década de 1980, y actualmente es gestionado por la \emph{Python Software Foundation} bajo una licencia \emph{open source}\index{open source} propia conocida como PSFL (\emph{Python Software Foundation License}). \emph{\parencite{Reference1}}
 
 \begin{figure}[ht]
     \centering
@@ -30,7 +30,7 @@ Además de esto, Poetry\index{Poetry} incorpora la mayoría de reglas establecid
 
 \section{Django\index{Django}}
 
-Django\index{Django} es un \emph{web framework} desarrollado para Python\index{Python} y que, al igual que este, cuenta con una licencia \emph{open source}. Fue desarrollado originalmente por Adrian Holovaty y Simon Willison, dos programadores web que trabajaban en un periódico. \emph{\parencite{Reference4}}
+Django\index{Django} es un \emph{web framework} desarrollado para Python\index{Python} y que, al igual que este, cuenta con una licencia \emph{open source}\index{open source}. Fue desarrollado originalmente por Adrian Holovaty y Simon Willison, dos programadores web que trabajaban en un periódico. \emph{\parencite{Reference4}}
 
 \begin{figure}[ht]
     \centering
@@ -60,13 +60,51 @@ Permite además interaccionar fácilmente con la API construida a través de una
 
 \subsection{Gunicorn}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+Gunicorn\index{Gunicorn} (\emph{"Green Unicorn"}) es un servidor HTTP\index{HTTP}, escrito en Python\index{Python}, que implementa WSGI\footnote{WSGI (\emph{Web Server Gateway Interface}) establece cómo deben ser llevadas las peticiones del servidor web a la aplicación web escrita en Python\emph{\parencite{Reference11}}.} como protocolo de llamadas.
+
+Funciona utilizando un esquema centralizado, donde un nodo maestro gestiona y orquesta diferentes tipos de nodos trabajadores. Estos pueden ser utilizados para procesar peticiones síncronas o asíncronas, y su número escala en función de la demanda que tenga el servidor. \emph{\parencite{Reference9}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Figures/gunicorn-logo}
+    \decoRule
+    \caption[Gunicorn (Logo)]{Logo de Gunicorn \emph{\parencite{Reference10}}}
+    \label{fig:gunicorn-logo}
+\end{figure}
 
 %-------------------------------------------------------------------------------
 
 \section{GrimoireLab}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
+GrimoireLab\index{GrimoireLab} es el resultado de años de investigación y análisis de comunidades \emph{open source}\index{open source} y procesos de desarrollo. Desarrollado originalmente por miembros del equipo \emph{LibreSoft} (que más tarde fundarían Bitergia), actualmente forma parte de CHAOSS, una iniciativa de la \emph{Linux Foundation} centrada en crear y modelar métricas sobre comunidades \emph{open source}\index{open source}. \emph{\parencite{Reference12}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.2\textwidth]{Figures/grimoirelab-logo}
+    \decoRule
+    \caption[GrimoireLab (Logo)]{Logo de GrimoireLab \emph{\parencite{Reference12}}}
+    \label{fig:grimoirelab-logo}
+\end{figure}
+
+Se trata de un conjunto de herramientas diseñadas para recoger, enriquecer, consumir y visualizar datos de casi cualquier fuente relacionada con el desarrollo \emph{Open Source}\index{open source}.
+
+Cada una de estas herramientas sirve a un propósito específico y, en su conjunto, proveen el servicio antes mencionado:
+
+\begin{itemize}
+    \item Perceval es el encargado de recoger los datos crudos de cada fuente de datos compatible con GrimoireLab\index{GrimoireLab}. Ya sea utilizando herramientas como Git\index{Git} o haciendo uso de la API\index{API} de la fuente analizada.
+    \item GrimoireELK enriquece los datos recogidos por Perceval. Genera, a partir de estos, nuevos datos que son de interés para estudiar las comunidades \emph{open source}\index{open source}.
+    \item Sorting Hat permite gestionar la información relacionada con identidades, incluso entre diferentes fuentes de datos.
+    \item SirMordred es la herramienta orquestadora para GrimoireLab\index{GrimoireLab}. Se encarga de sincronizar a todas las componentes para dar servicio.
+    \item ¡Y muchas más herramientas increíbles!
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figures/grimoirelab-schema}
+    \decoRule
+    \caption[GrimoireLab (Esquema)]{Esquema de GrimoireLab \emph{\parencite{Reference12}}}
+    \label{fig:grimoirelab-schema}
+\end{figure}
 
 \subsection{Cauldron.io}
 
