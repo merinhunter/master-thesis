@@ -58,9 +58,9 @@ A diferencia del \emph{framework} original, DRF se centra principalmente en la p
 
 Permite además interaccionar fácilmente con la API construida a través de una interfaz web básica, y es capaz de generar documentación dinámica para la API siguiendo la especificación de OpenAPI\footnote{\url{https://spec.openapis.org/oas/v3.1.0}}. \emph{\parencite{Reference7}}
 
-\subsection{Gunicorn}
+\subsection{Gunicorn}\label{sec:gunicorn}
 
-Gunicorn\index{Gunicorn} (\emph{"Green Unicorn"}) es un servidor HTTP\index{HTTP}, escrito en Python\index{Python}, que implementa WSGI\footnote{WSGI (\emph{Web Server Gateway Interface}) establece cómo deben ser llevadas las peticiones del servidor web a la aplicación web escrita en Python\emph{\parencite{Reference11}}.} como protocolo de llamadas.
+Gunicorn\index{Gunicorn} (\emph{"Green Unicorn"}) es un servidor HTTP\index{HTTP}, escrito en Python\index{Python}, que implementa WSGI\footnote{WSGI (\emph{Web Server Gateway Interface}) establece cómo deben ser llevadas las peticiones del servidor web a la aplicación web escrita en Python, de manera síncrona. \emph{\parencite{Reference11}}} como protocolo de llamadas.
 
 Funciona utilizando un esquema centralizado, donde un nodo maestro gestiona y orquesta diferentes tipos de nodos trabajadores. Estos pueden ser utilizados para procesar peticiones síncronas o asíncronas, y su número escala en función de la demanda que tenga el servidor. \emph{\parencite{Reference9}}
 
@@ -134,21 +134,68 @@ Además de las visualizaciones generadas en Kibana\index{Kibana}, Cauldron\index
 
 \section{FastAPI}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
+FastAPI\index{FastAPI} es un \emph{web framework} desarrollado para Python\index{Python}, orientado principalmente a la construcción de APIs utilizando las anotaciones de tipos estándar de Python\index{Python}. \emph{\parencite{Reference14}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figures/fastapi-logo}
+    \decoRule
+    \caption[FastAPI (Logo)]{Logo de FastAPI \emph{\parencite{Reference14}}}
+    \label{fig:fastapi-logo}
+\end{figure}
+
+FastAPI\index{FastAPI} nace después de que su autor no pudiera cubrir las necesidades de sus proyectos personales con los \emph{web frameworks} actuales en ese momento. Después de investigar las especificaciones de OpenAPI\index{OpenAPI}, JSON\index{JSON}, OAuth2, etc., decide construir su propia solución teniendo como base Pydantic\footnote{Pydantic es una herramienta que permite aprovechar las anotaciones de Python para informar de errores en la validación de datos.} y Starlette\footnote{Starlette es un framework que permite construir servicios web asíncronos en Python.}. \emph{\parencite{Reference15}}
+
+FastAPI\index{FastAPI} hace uso de las anotaciones de tipos en Python\index{Python} para conseguir \emph{parsing} y validación de datos, documentación automática, y soporte en editores (comprobación de errores, autocompletado, etc). Hace uso de ASGI\footnote{ASGI (\emph{Asynchronous Server Gateway Interface}) es similar a WSGI, pero para llamadas asíncronas.} para llamadas asíncronas por defecto, es compatible con la mayoría de bases de datos relacionales y no relacionales, y permite tener un servicio web funcional en pocos pasos. \emph{\parencite{Reference14}}
 
 \subsection{Uvicorn}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+Uvicorn\index{Uvicorn} es un servidor HTTP\index{HTTP}, para aplicaciones Python\index{Python}, que procesa las llamadas de manera asíncrona implementando ASGI. En combinación con \nameref{sec:gunicorn}\index{Gunicorn}, se obtiene un servidor asíncrono multi nodo. \emph{\parencite{Reference16}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\textwidth]{Figures/uvicorn-logo}
+    \decoRule
+    \caption[Uvicorn (Logo)]{Logo de Uvicorn \emph{\parencite{Reference16}}}
+    \label{fig:uvicorn-logo}
+\end{figure}
 
 %-------------------------------------------------------------------------------
 
 \section{OpenSearch}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
+OpenSearch\index{OpenSearch} es un \emph{suite} de herramientas \emph{open source}\index{open source} que permite el almacenamiento, búsqueda, y análisis de datos. Se trata de un proyecto formado principalmente por dos componentes: el propio motor OpenSearch\index{OpenSearch} y OpenSearch Dashboards, siendo estos un \emph{fork}\footnote{Uno de los principales motivos de su creación fue la decisión de modificar la licencia de Elasticsearch y Kibana a una no \emph{open source} por parte de sus creadores.} de los proyectos Elasticsearch\index{Elasticsearch} y Kibana\index{Kibana}, respectivamente. \emph{\parencite{Reference17}}
 
-\subsection{Kibana}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Figures/opensearch-logo}
+    \decoRule
+    \caption[OpenSearch (Logo)]{Logo de OpenSearch \emph{\parencite{Reference17}}}
+    \label{fig:opensearch-logo}
+\end{figure}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+OpenSearch\index{OpenSearch} está basado en el motor de búsqueda Apache Lucene, lo que le confiere una gran capacidad de indexación en volúmenes de datos grandes. Muchas de las características que definen a OpenSearch\index{OpenSearch} provienen de plugins para Elasticsearch\index{Elasticsearch}, pero que el primero integra de manera nativa. Entre estas características destacan:
+
+\begin{itemize}
+    \item Un módulo avanzado de seguridad que permite la autenticación de usuarios mediante \emph{Active Directory}, LDAP, y otros protocolos similares. Igualmente, permite mayor granularidad sobre los permisos en índices y otras estructuras de datos.
+    \item Un módulo de gestión de índices, con el que definir políticas y automatismos en índices.
+    \item Un analizador de eficiencia que es capaz de obtener diversas métricas del \emph{cluster} de OpenSearch\index{OpenSearch} asociadas a la eficiencia, como la cantidad de memoria utilizada por los nodos, o el número de operaciones de lectura y escritura.
+    \item Un sistema de alertas que permite establecer límites en gráficas y métricas, los cuales envían una notificación al ser rebasados.
+\end{itemize}
+
+\subsection{OpenSearch Dashboards}
+
+OpenSearch\index{OpenSearch} Dashboards es la herramienta de visualización de datos de OpenSearch. Está basado en Kibana\index{Kibana}, tratándose de hecho de un \emph{fork} de esta. \emph{\parencite{Reference18}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/opensearch-dashboards}
+    \decoRule
+    \caption[OpenSearch Dashboards]{OpenSearch Dashboards \emph{\parencite{Reference18}}}
+    \label{fig:opensearch-dashboards}
+\end{figure}
+
+Posee varias herramientas para interaccionar con los datos almacenados en el \emph{cluster} y crear, con estos, gráficos y métricas como los que aparecen en la Figura~\ref{fig:opensearch-dashboards}. Permite también la construcción de alias y patrones para índices, y la visualización de los datos directamente en formato JSON (tal y como están almacenados en el \emph{cluster}).
 
 %-------------------------------------------------------------------------------
 
