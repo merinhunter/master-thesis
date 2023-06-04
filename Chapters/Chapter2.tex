@@ -239,11 +239,31 @@ Como se observa en la Figura~\ref{fig:docker-workflow}, además del cliente y el
 
 \section{GitHub}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
+GitHub\index{GitHub} es un servicio \emph{online} que permite a los desarrolladores y a sus equipos llevar un control de versiones sobre sus proyectos \emph{software}\index{software}. Fue adquirido en 2018 por Microsoft y actualmente es la plataforma \emph{online} con mayor cantidad de repositorios de código del mundo. \emph{\parencite{Reference21}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\textwidth]{Figures/octocat}
+    \decoRule
+    \caption[Octocat]{Octocat (mascota de GitHub) \emph{\parencite{Reference23}}}
+    \label{fig:octocat}
+\end{figure}
+
+GitHub\index{GitHub} es básicamente un SaaS de Git\index{Git}, pero con funcionalidades añadidas como la creación de \emph{issues} para el seguimiento de errores, la solicitud de cambios a código (conocidas como \emph{pull requests}), la inclusión de mecanismos automatizados (CI/CD), o la creación de \emph{wikis}, entre otros. \emph{\parencite{Reference22}}
 
 \subsection{Dependabot}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+Dependabot\index{Dependabot} es una herramienta que permite a los desarrolladores despreocuparse de actualizar las dependencias de sus proyectos \emph{software}\index{software}. Se encarga de analizar los ficheros de dependencias de un proyecto\footnote{Por ejemplo, en un proyecto Python\index{Python} estas dependencias están definidas en el fichero \emph{requirements.txt} o \emph{pyproject.toml}.} y buscar nuevas actualizaciones de estas, notificando al usuario y, en ocasiones, sugiriendo los cambios necesarios al código para su inclusión. \emph{\parencite{Reference24}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.2\textwidth]{Figures/dependabot-logo}
+    \decoRule
+    \caption[Dependabot (Logo)]{Logo de Dependabot \emph{\parencite{Reference25}}}
+    \label{fig:dependabot-logo}
+\end{figure}
+
+Dependabot\index{Dependabot} fue adquirido por GitHub\index{GitHub} en 2019, lo que ha permitido una integración más estrecha con la plataforma. Mediante la creación de un fichero \emph{dependabot.yml}, los desarrolladores pueden establecer que dependencias analizar, la frecuencia de estos análisis, y la fuente desde donde se buscan actualizaciones. \emph{\parencite{Reference24}}
 
 %-------------------------------------------------------------------------------
 
@@ -253,8 +273,12 @@ Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum an
 
 Es un protocolo genérico y sin estado que es usado para múltiples tareas como la transferencia de hipertexto o la representación de sistemas de ficheros.
 
-Una característica de HTTP\index{HTTP} es la negociación de la representación de los datos, lo que permite construir sistemas independientemente de los datos que se vayan a transmitir. \emph{\parencite{ReferenceX}}
+Una característica de HTTP\index{HTTP} es la negociación de la representación de los datos, lo que permite construir sistemas independientemente de los datos que se vayan a transmitir. \emph{\parencite{Reference26}}
 
 \subsection{API REST}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+Una API\index{API} (\emph{Application Programming Interface}) es un contrato entre dos equipos sobre como deben comunicarse entre ellos. Con el uso de APIs se pretende abstraer los detalles acerca de como un sistema funciona internamente, haciendo públicas solo aquellas partes que los desarrolladores pudieran encontrar interesantes. De hecho, aunque la lógica interna cambiara, la API debería permanecer intacta. \emph{\parencite{Reference27}}
+
+REST\index{REST} (\emph{Representational State Transfer}) es un estilo de arquitecura \emph{software}\index{software} para sistemas distribuidos que operan con contenido de diverso tipo. La idea tras este estilo es que cada respuesta del servidor debe ser una representación de un recurso (comúnmente en formato JSON\index{JSON}), siendo las llamadas a este solicitudes para la creación, actualización o eliminación de un recurso. \emph{\parencite{Reference28}}
+
+Por tanto, una API\index{API} REST\index{REST} sería aquella que sigue los principios arquitectónicos que le dan nombre.
