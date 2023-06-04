@@ -28,7 +28,7 @@ Además de esto, Poetry\index{Poetry} incorpora la mayoría de reglas establecid
 
 %-------------------------------------------------------------------------------
 
-\section{Django\index{Django}}
+\section{Django}\label{sec:django}
 
 Django\index{Django} es un \emph{web framework} desarrollado para Python\index{Python} y que, al igual que este, cuenta con una licencia \emph{open source}\index{open source}. Fue desarrollado originalmente por Adrian Holovaty y Simon Willison, dos programadores web que trabajaban en un periódico. \emph{\parencite{Reference4}}
 
@@ -201,13 +201,39 @@ Posee varias herramientas para interaccionar con los datos almacenados en el \em
 
 \section{PostgreSQL}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
+PostgreSQL\index{PostgreSQL} es un sistema de base de datos relacional con mucha historia (fue desarrollado originalmente en 1996). Cuenta con licencia \emph{open source}\index{open source}, y está gestionado por una comunidad colaborativa de desarroladores conocida como \emph{PostgreSQL Global Development Group}. \emph{\parencite{Reference19}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\textwidth]{Figures/postgresql-logo}
+    \decoRule
+    \caption[PostgreSQL (Logo)]{Logo de PostgreSQL \emph{\parencite{Reference19}}}
+    \label{fig:postgresql-logo}
+\end{figure}
+
+PostgreSQL\index{PostgreSQL} es la opción recomendada para \nameref{sec:django}\index{Django}. Esto es debido a las muchas características que lo hacen una opción interesante, como la diversidad de estructuras nativas (\emph{arrays}, direcciones IP, etc), su capacidad para alta concurrencia, o la posibilidad de ejecutar bloques de código en el servidor.
 
 %-------------------------------------------------------------------------------
 
 \section{Docker}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
+Docker\index{Docker} es el sistema gestor de contenedores\index{Contenedor} más utilizado actualmente, debido a la sencillez de su uso y a la cantidad de funcionalidades que ofrece. Docker\index{Docker} se basa en un esquema cliente-servidor donde el cliente es utilizado por los usuarios para comunicarse con el demonio de Docker\index{Docker} (el servidor), el cual se encarga de la construcción de contenedores\index{Contenedor}, su ejecución, y su distribución. \emph{\parencite{Reference20}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/docker-workflow}
+    \decoRule
+    \caption[Docker (Workflow)]{Flujo de trabajo en Docker \emph{\parencite{Reference20}}}
+    \label{fig:docker-workflow}
+\end{figure}
+
+Como se observa en la Figura~\ref{fig:docker-workflow}, además del cliente y el demonio antes mencionados, en el despliegue y distribución de un contenedor\index{Contenedor} en Docker\index{Docker} intervienen varios elementos:
+
+\begin{itemize}
+    \item \textbf{Imágenes}: Una imagen en Docker\index{Docker} es una plantilla que detalla las instrucciones para la construcción de un contenedor\index{Contenedor}. Un usuario tiene la posibilidad de crear sus propias imágenes o utilizar las que otros usuarios hayan publicado en un registro. Para el primer caso, un usuario que quiera generar su propia imagen deberá crear un fichero \emph{Dockerfile} en el que se detallan las instrucciones (comandos) necesarias para la construcción del contenedor\index{Contenedor}.
+    \item \textbf{Contenedores}: Un contenedor\index{Contenedor}, en Docker\index{Docker}, es una instancia ejecutable de una imagen. Pueden ser creados, iniciados, parados, o eliminados utilizando el cliente de Docker\index{Docker}. Se pueden conectar a una o más redes y se les puede agregar volúmenes para ampliar su espacio de almacenamiento.
+    \item \textbf{Registros}: Un registro es un servidor donde los usuarios de Docker\index{Docker} pueden distribuir sus imágenes, de manera pública o privada.
+\end{itemize}
 
 %-------------------------------------------------------------------------------
 
@@ -223,7 +249,11 @@ Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum an
 
 \section{HTTP}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
+\emph{Hypertext Transfer Protocol} (HTTP\index{HTTP}) es un protocolo de nivel de aplicación para sistemas de información distribuidos.
+
+Es un protocolo genérico y sin estado que es usado para múltiples tareas como la transferencia de hipertexto o la representación de sistemas de ficheros.
+
+Una característica de HTTP\index{HTTP} es la negociación de la representación de los datos, lo que permite construir sistemas independientemente de los datos que se vayan a transmitir. \emph{\parencite{ReferenceX}}
 
 \subsection{API REST}
 
