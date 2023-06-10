@@ -1,6 +1,6 @@
 % Chapter 2: State of the Art
 
-\chapter{Estado del Arte} % Main chapter title
+\chapter{Tecnologías utilizadas} % Main chapter title
 
 \label{Chapter2} % For referencing this chapter elsewhere, use \ref{Chapter2}
 
@@ -25,6 +25,24 @@ Python\index{Python} es actualmente uno de los lenguajes de programación más p
 Poetry\index{Poetry} es un gestor de paquetes y dependencias para Python\index{Python}. Entre sus características más destacadas se encuentra la generación de un fichero con la especificación exacta de dependencias (incluidas las dependencias de dependencias), lo que asegura instalaciones idénticas en diferentes entornos. \emph{\parencite{Reference6}}
 
 Además de esto, Poetry\index{Poetry} incorpora la mayoría de reglas establecidas en PEP\footnote{PEP (\emph{Python Enhancement Proposal}) recoge y describe las principales guías y recomendaciones de la comunidad respecto a nuevas características y procesos para cualquier desarrollo con Python.}, como el uso del fichero \emph{pyproject.toml} para escribir la metainformación de los paquetes, o el uso del esquema \emph{major.minor.micro} para los identificadores de versión. \emph{\parencite{Reference6}}
+
+%-------------------------------------------------------------------------------
+
+\section{HTTP}
+
+\emph{Hypertext Transfer Protocol} (HTTP\index{HTTP}) es un protocolo de nivel de aplicación para sistemas de información distribuidos.
+
+Es un protocolo genérico y sin estado que es usado para múltiples tareas como la transferencia de hipertexto o la representación de sistemas de ficheros.
+
+Una característica de HTTP\index{HTTP} es la negociación de la representación de los datos, lo que permite construir sistemas independientemente de los datos que se vayan a transmitir. \emph{\parencite{Reference26}}
+
+\subsection{API REST}
+
+Una API\index{API} (\emph{Application Programming Interface}) es un contrato entre dos equipos sobre como deben comunicarse entre ellos. Con el uso de APIs se pretende abstraer los detalles acerca de como un sistema funciona internamente, haciendo públicas solo aquellas partes que los desarrolladores pudieran encontrar interesantes. De hecho, aunque la lógica interna cambiara, la API debería permanecer intacta. \emph{\parencite{Reference27}}
+
+REST\index{REST} (\emph{Representational State Transfer}) es un estilo de arquitecura \emph{software}\index{software} para sistemas distribuidos que operan con contenido de diverso tipo. La idea tras este estilo es que cada respuesta del servidor debe ser una representación de un recurso (comúnmente en formato JSON\index{JSON}), siendo las llamadas a este solicitudes para la creación, actualización o eliminación de un recurso. \emph{\parencite{Reference28}}
+
+Por tanto, una API\index{API} REST\index{REST} sería aquella que sigue los principios arquitectónicos que le dan nombre.
 
 %-------------------------------------------------------------------------------
 
@@ -74,7 +92,7 @@ Funciona utilizando un esquema centralizado, donde un nodo maestro gestiona y or
 
 %-------------------------------------------------------------------------------
 
-\section{GrimoireLab}
+\section{GrimoireLab}\label{sec:grimoirelab}
 
 GrimoireLab\index{GrimoireLab} es el resultado de años de investigación y análisis de comunidades \emph{open source}\index{open source} y procesos de desarrollo. Desarrollado originalmente por miembros del equipo \emph{LibreSoft} (que más tarde fundarían Bitergia), actualmente forma parte de CHAOSS, una iniciativa de la \emph{Linux Foundation} centrada en crear y modelar métricas sobre comunidades \emph{open source}\index{open source}. \emph{\parencite{Reference12}}
 
@@ -162,7 +180,7 @@ Uvicorn\index{Uvicorn} es un servidor HTTP\index{HTTP}, para aplicaciones Python
 
 %-------------------------------------------------------------------------------
 
-\section{OpenSearch}
+\section{OpenSearch}\label{sec:opensearch}
 
 OpenSearch\index{OpenSearch} es un \emph{suite} de herramientas \emph{open source}\index{open source} que permite el almacenamiento, búsqueda, y análisis de datos. Se trata de un proyecto formado principalmente por dos componentes: el propio motor OpenSearch\index{OpenSearch} y OpenSearch Dashboards, siendo estos un \emph{fork}\footnote{Uno de los principales motivos de su creación fue la decisión de modificar la licencia de Elasticsearch y Kibana a una no \emph{open source} por parte de sus creadores.} de los proyectos Elasticsearch\index{Elasticsearch} y Kibana\index{Kibana}, respectivamente. \emph{\parencite{Reference17}}
 
@@ -264,21 +282,3 @@ Dependabot\index{Dependabot} es una herramienta que permite a los desarrolladore
 \end{figure}
 
 Dependabot\index{Dependabot} fue adquirido por GitHub\index{GitHub} en 2019, lo que ha permitido una integración más estrecha con la plataforma. Mediante la creación de un fichero \emph{dependabot.yml}, los desarrolladores pueden establecer que dependencias analizar, la frecuencia de estos análisis, y la fuente desde donde se buscan actualizaciones. \emph{\parencite{Reference24}}
-
-%-------------------------------------------------------------------------------
-
-\section{HTTP}
-
-\emph{Hypertext Transfer Protocol} (HTTP\index{HTTP}) es un protocolo de nivel de aplicación para sistemas de información distribuidos.
-
-Es un protocolo genérico y sin estado que es usado para múltiples tareas como la transferencia de hipertexto o la representación de sistemas de ficheros.
-
-Una característica de HTTP\index{HTTP} es la negociación de la representación de los datos, lo que permite construir sistemas independientemente de los datos que se vayan a transmitir. \emph{\parencite{Reference26}}
-
-\subsection{API REST}
-
-Una API\index{API} (\emph{Application Programming Interface}) es un contrato entre dos equipos sobre como deben comunicarse entre ellos. Con el uso de APIs se pretende abstraer los detalles acerca de como un sistema funciona internamente, haciendo públicas solo aquellas partes que los desarrolladores pudieran encontrar interesantes. De hecho, aunque la lógica interna cambiara, la API debería permanecer intacta. \emph{\parencite{Reference27}}
-
-REST\index{REST} (\emph{Representational State Transfer}) es un estilo de arquitecura \emph{software}\index{software} para sistemas distribuidos que operan con contenido de diverso tipo. La idea tras este estilo es que cada respuesta del servidor debe ser una representación de un recurso (comúnmente en formato JSON\index{JSON}), siendo las llamadas a este solicitudes para la creación, actualización o eliminación de un recurso. \emph{\parencite{Reference28}}
-
-Por tanto, una API\index{API} REST\index{REST} sería aquella que sigue los principios arquitectónicos que le dan nombre.
