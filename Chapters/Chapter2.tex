@@ -6,7 +6,7 @@
 
 %-------------------------------------------------------------------------------
 
-\section{Python\index{Python}}
+\section{Python}\label{sec:python}
 
 Python\index{Python} es un lenguaje de programación orientada a objetos de alto nivel. Fue desarrollado originalmente por Guido van Rossum en el final de la década de 1980, y actualmente es gestionado por la \emph{Python Software Foundation} bajo una licencia \emph{open source}\index{open source} propia conocida como PSFL (\emph{Python Software Foundation License}). \emph{\parencite{Reference1}}
 
@@ -20,7 +20,7 @@ Python\index{Python} es un lenguaje de programación orientada a objetos de alto
 
 Python\index{Python} es actualmente uno de los lenguajes de programación más populares. Esto se debe en gran parte a su modularidad, la cual permite agregar fácilmente nuevas piezas de código a aplicaciones ya desarrolladas. \emph{\parencite{Reference3}}
 
-\subsection{Poetry}
+\subsection{Poetry}\label{sec:poetry}
 
 Poetry\index{Poetry} es un gestor de paquetes y dependencias para Python\index{Python}. Entre sus características más destacadas se encuentra la generación de un fichero con la especificación exacta de dependencias (incluidas las dependencias de dependencias), lo que asegura instalaciones idénticas en diferentes entornos. \emph{\parencite{Reference6}}
 
@@ -60,7 +60,7 @@ Django\index{Django} es un \emph{web framework} desarrollado para Python\index{P
 
 Django\index{Django} sigue los principios de modularidad que caracterizan a Python\index{Python}, además de incluir muchas otras características interesantes como un sistema de vistas, modelos y plantillas que permite agilizar el desarrollo de aplicaciones web. Esto, sumado a un servidor web simple para desarrollos locales, una interfaz administrativa intuitiva, y la posibilidad de construir \emph{middleware} de todo tipo, convierten a Django\index{Django} en uno de los \emph{frameworks} para desarrollo web más famosos y usados de los últimos años. \emph{\parencite{Reference4}}
 
-\subsection{Django REST Framework}
+\subsection{Django REST Framework}\label{sec:drf}
 
 Django\index{Django} REST Framework (DRF) es un módulo para Django que amplía las características de este, y que facilita la creación de APIs REST manteniendo todas las ventajas de Django. \emph{\parencite{Reference7}}
 
@@ -233,7 +233,7 @@ PostgreSQL\index{PostgreSQL} es la opción recomendada para \nameref{sec:django}
 
 %-------------------------------------------------------------------------------
 
-\section{Docker}
+\section{Docker}\label{sec:docker}
 
 Docker\index{Docker} es el sistema gestor de contenedores\index{Contenedor} más utilizado actualmente, debido a la sencillez de su uso y a la cantidad de funcionalidades que ofrece. Docker\index{Docker} se basa en un esquema cliente-servidor donde el cliente es utilizado por los usuarios para comunicarse con el demonio de Docker\index{Docker} (el servidor), el cual se encarga de la construcción de contenedores\index{Contenedor}, su ejecución, y su distribución. \emph{\parencite{Reference20}}
 
@@ -241,7 +241,7 @@ Docker\index{Docker} es el sistema gestor de contenedores\index{Contenedor} más
     \centering
     \includegraphics[width=0.8\textwidth]{Figures/docker-workflow}
     \decoRule
-    \caption[Docker (Workflow)]{Flujo de trabajo en Docker \emph{\parencite{Reference20}}}
+    \caption[Docker (\emph{Workflow})]{Flujo de trabajo en Docker \emph{\parencite{Reference20}}}
     \label{fig:docker-workflow}
 \end{figure}
 
@@ -269,7 +269,7 @@ GitHub\index{GitHub} es un servicio \emph{online} que permite a los desarrollado
 
 GitHub\index{GitHub} es básicamente un SaaS de Git\index{Git}, pero con funcionalidades añadidas como la creación de \emph{issues} para el seguimiento de errores, la solicitud de cambios a código (conocidas como \emph{pull requests}), la inclusión de mecanismos automatizados (CI/CD), o la creación de \emph{wikis}, entre otros. \emph{\parencite{Reference22}}
 
-\subsection{Dependabot}
+\subsection{Dependabot}\label{sec:dependabot}
 
 Dependabot\index{Dependabot} es una herramienta que permite a los desarrolladores despreocuparse de actualizar las dependencias de sus proyectos \emph{software}\index{software}. Se encarga de analizar los ficheros de dependencias de un proyecto\footnote{Por ejemplo, en un proyecto Python\index{Python} estas dependencias están definidas en el fichero \emph{requirements.txt} o \emph{pyproject.toml}.} y buscar nuevas actualizaciones de estas, notificando al usuario y, en ocasiones, sugiriendo los cambios necesarios al código para su inclusión. \emph{\parencite{Reference24}}
 

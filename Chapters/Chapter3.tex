@@ -21,9 +21,9 @@ El objetivo de este proyecto es proporcionar un servicio que permita analizar pr
 
 \subsection{Grimoirebots I}
 
-El primer prototipo de la aplicación está creado utilizando el framework Django REST Framework para Python, y Poetry como gestor de paquetes y dependencias. Esta primera versión establece la arquitectura base de la aplicación y el esquema de comunicación entre servidor y cliente.
+El primer prototipo de la aplicación está creado utilizando el framework \nameref{sec:drf}\index{Django} para \nameref{sec:python}\index{Python}, y \nameref{sec:poetry}\index{Poetry} como gestor de paquetes y dependencias. Esta primera versión establece la arquitectura base de la aplicación y el esquema de comunicación entre servidor y cliente.
 
-Para este fin, se han desarrollado los siguientes modelos:
+Para este fin, se han desarrollado los siguientes modelos\footnote{Los campos no obligatorios aparecen coloreados en gris.}:
 
 \begin{figure}[ht]
     \centering
@@ -34,20 +34,56 @@ Para este fin, se han desarrollado los siguientes modelos:
 \end{figure}
 
 \begin{itemize}
-    \item \code{Order} -- Este modelo representa la solicitud hecha por un usuario. Está formado por un identificador UUID único, un \emph{string} representando la URL del repositorio git que se quiere analizar, y la fecha de creación de la instancia con un campo \emph{datetime}.
-    \item \code{Report} - Este modelo representa el resultado de procesar una solicitud hecha por un usuario. Está formado por un identificador UUID único, una referencia a la solicitud (\code{Order}) que originó su creación, la fecha de creación de la instancia con un campo \emph{datetime}, y un \emph{string} representando el procesamiento de la solicitud.
+    \item \code{Order} -- Este modelo representa la solicitud hecha por un usuario. Está formado por un identificador UUID único, un \emph{string} representando la URL del repositorio git\index{Git} que se quiere analizar, y la fecha de creación de la instancia con un campo \emph{datetime}. (Figura~\ref{fig:grimoirebots_i_models})
+    \item \code{Report} -- Este modelo representa el resultado de procesar una solicitud hecha por un usuario. Está formado por un identificador UUID único, una referencia a la solicitud (\code{Order}) que originó su creación, la fecha de creación de la instancia con un campo \emph{datetime}, y un \emph{string} representando el procesamiento de la solicitud. (Figura~\ref{fig:grimoirebots_i_models})
 \end{itemize}
 
-- Esquema básico
-- Recibe el input del usuario y crea estructuras básicas con este
-- Crea reports en los que solo hay texto
-- Tiene el endpoint para recoger las tareas sin report
-- Uso de DRF
-- Dockerfile
-- Sqlite
-- Dependabot
+También se han desarrollado los siguientes \emph{paths} en la API\index{API}:
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/grimoirebots_i_api}
+    \decoRule
+    \caption[Grimoirebots I (API)]{API de Grimoirebots (Versión 1)}
+    \label{fig:grimoirebots_i_api}
+\end{figure}
+
+\begin{itemize}
+    \item En la \emph{app} \code{orders} se han incluido \emph{paths} que permiten obtener la lista de solicitudes, la lista de solicitudes pendientes, y crear, modificar y eliminar solicitudes. (Figura~\ref{fig:grimoirebots_i_api})
+    \item En la \emph{app} \code{reports} se han incluido llamadas para listar informes, y para crear, modificar y eliminar los mismos. (Figura~\ref{fig:grimoirebots_i_api})
+\end{itemize}
+
+Adicionalmente, se ha creado una imagen \nameref{sec:docker}\index{Docker} que instala las dependencias del proyecto y lo lanza utilizando \nameref{sec:gunicorn}\index{Gunicorn} como servidor WSGI, y se ha incluido el uso de \nameref{sec:dependabot}\index{Dependabot} para la comprobación de cualquier actualización en las dependencias del proyecto y avisar de esto al equipo desarrollador.
+
+Por otra parte, el cliente o bot automático es una aplicación escrita en \nameref{sec:python}\index{Python} que, haciendo uso de la librería \code{apiclient}, recoge periódicamente aquellas solicitudes pendientes de procesar y realiza un procesamiento básico de ellas. En esta parte del desarrollo aún no se había incluido \nameref{sec:grimoirelab}\index{GrimoireLab}, por lo que el procesamiento que el cliente hace de la solicitud es la construcción de un \emph{string} que contiene el identificador y el repositorio de la solicitud.
+
+Para ilustrar el comportamiento de este prototipo, se han creado las siguientes infografías:
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/grimoirebots_frontend}
+    \decoRule
+    \caption[Grimoirebots (\emph{Frontend})]{\emph{Frontend} de Grimoirebots (Versiones 1 y 2)}
+    \label{fig:grimoirebots_frontend}
+\end{figure}
+
+Como muestra la Figura~\ref{fig:grimoirebots_frontend}, el usuario crea nuevas solicitudes de análisis realizando una llamada POST a \code{/orders/}. El usuario puede listar los informes creados mediante una llamada GET a \code{/reports/} y acceder a cada uno de ellos mediante una llamada GET a \code{/reports/<uuid>}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/grimoirebots_i_backend}
+    \decoRule
+    \caption[Grimoirebots I (\emph{Backend})]{\emph{Backend} de Grimoirebots (Versión 1)}
+    \label{fig:grimoirebots_i_backend}
+\end{figure}
+
+Por su parte, en la Figura~\ref{fig:grimoirebots_i_backend} se incluyen las interacciones que realiza el cliente con la API\index{API} para procesar las solicitudes de los usuarios. Periódicamente, el cliente pide al servidor las solicitudes que aún no hayan sido procesadas. Por cada una de estas, pide el repositorio solicitado para analizar haciendo una llamada GET a \code{/orders/<uuid>/projects.json}. Posteriormente, realiza el procesamiento básico comentado anteriormente y realiza una llamada POST a \code{/reports/} para crear el informe y asociarlo con la solicitud del usuario.
 
 \subsection{Grimoirebots II}
+
+El segundo (y último) prototipo utiliza las mismas tecnologías mencionadas en el prototipo anterior, y algunas añadidas. Como gran aditivo, en este prototipo se incluye el uso de \nameref{sec:grimoirelab}\index{GrimoireLab} y \nameref{sec:opensearch}\index{OpenSearch} para realizar el análisis de proyectos \emph{software}\index{Software}.
+
+Debido a esto, este prototipo actualiza los modelos de la aplicación de la siguiente forma\footnote{Igual que en el apartado anterior, los campos no obligatorios aparecen coloreados en gris.}:
 
 \begin{figure}[ht]
     \centering
@@ -57,21 +93,45 @@ Para este fin, se han desarrollado los siguientes modelos:
     \label{fig:grimoirebots_ii_models}
 \end{figure}
 
-- Inclusión de los modelos Projects y Setup
-- Inclusión de OpenSearch
-- Inclusión de GrimoireLab
-- Inclusión de la OpenAPI spec en la app
-- Inclusión de PostgreSQL
-- Unificación de endpoints para project y setup
+\begin{itemize}
+    \item \code{Order} -- Este modelo sigue representando la solicitud hecha por un usuario. El campo \code{data\_source\_url} ha sido eliminado y se ha incluido un campo \code{title} para que el usuario pueda identificar más fácilmente la solicitud. (Figura~\ref{fig:grimoirebots_ii_models})
+    \item \code{Setup} -- Este modelo representa la configuración utilizada por \nameref{sec:grimoirelab}\index{GrimoireLab} en el análisis de proyectos \emph{software}\index{Software}. Está enlazado con una solicitud específica mediante el campo \code{order}. (Figura~\ref{fig:grimoirebots_ii_models})
+    \item \code{Projects} -- Este modelo representa la lista de repositorios git\index{Git} que un usuario ha solicitado analizar. Está compuesto por un identificador numérico único, el identificador de la solicitud, y una lista de \emph{strings} con las URLs de los repositorios. (Figura~\ref{fig:grimoirebots_ii_models})
+    \item \code{Report} -- Este modelo no ha sufrido cambios en este prototipo. (Figura~\ref{fig:grimoirebots_ii_models})
+\end{itemize}
 
-\subsection{Grimoirebots client I}
+Los \emph{paths} que incluye la API\index{API} de este prototipo son los mismos que en el anterior, a excepción de:
 
-Bot que recoge las órdenes pendientes y crea un elemento report con un texto
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/grimoirebots_ii_api}
+    \decoRule
+    \caption[Grimoirebots II (API)]{API de Grimoirebots (Versión 2)}
+    \label{fig:grimoirebots_ii_api}
+\end{figure}
 
-\subsection{Grimoirebots client II}
+\begin{itemize}
+    \item La llamada POST a \code{/orders/} ahora incluye los campos \code{title}, \code{projects}, y \code{setup} en el cuerpo de la petición. De esta forma, el usuario utiliza una única llamada para crear su solicitud de análisis. (Figura~\ref{fig:grimoirebots_ii_api})
+    \item Se han incluido las llamadas GET para \code{/orders/<uuid>/projects.json} y para \code{/orders/<uuid>/setup.cfg} para obtener los ficheros con la lista de repositorios y la configuración para \nameref{sec:grimoirelab}\index{GrimoireLab}, respectivamente. (Figura~\ref{fig:grimoirebots_ii_api})
+\end{itemize}
 
-- Bot que recoge las ordenes pendientes y lanza un contenedor de Docker con GrimoireLab
-- El cliente crea los volúmenes de donde los contenedores recogen la información
+El cliente es modificado en este prototipo para incluir el uso de \nameref{sec:grimoirelab}\index{GrimoireLab}. La forma en que el cliente hace uso de esta herramienta es mediante un contenedor \nameref{sec:docker}\index{Docker}\footnote{\url{https://hub.docker.com/r/grimoirelab/grimoirelab}} lanzado desde el mismo cliente gracias a la librería \code{docker}.
+
+Por otro lado, en este prototipo se incluye el uso de \nameref{sec:opensearch}\index{OpenSearch} y OpenSearch Dashboards para almacenar y visionar los datos generados por \nameref{sec:grimoirelab}\index{GrimoireLab}. Este sistema es lanzado mediante \nameref{sec:docker}\index{Docker} Compose\footnote{Docker Compose es una herramienta que permite lanzar múltiples contenedores de manera simultánea, mediante ficheros de configuración.}, y se ha construido un fichero de configuración con las características que necesita el sistema.
+
+Igual que en el prototipo anterios, se han creado algunas infografías para ilustrar su comportamiento:
+
+En el caso de la interacción entre usuario y servidor, el comportamiento es el mismo que en el prototipo 1. (Véase~\ref{fig:grimoirebots_frontend})
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/grimoirebots_ii_backend}
+    \decoRule
+    \caption[Grimoirebots II (\emph{Backend})]{\emph{Backend} de Grimoirebots (Versión 2)}
+    \label{fig:grimoirebots_ii_backend}
+\end{figure}
+
+El \emph{backend}, sin embargo, sufre varios cambios. Como muestra la Figura~\ref{fig:grimoirebots_ii_backend}, el cliente obtiene la lista de solicitudes pendientes. Para cada una de ellas obtiene los ficheros de repositorios y configuración. A continuación, utiliza la librería \code{docker} para lanzar un contenedor de \nameref{sec:grimoirelab}\index{GrimoireLab} por cada solicitud, incluyendo los ficheros antes mencionados en el volumen que utiliza cada contenedor. Por último, cada contenedor realizará el análisis de los repositorios indicados en la solicitud e ingestará los datos al \emph{cluster} de \nameref{sec:opensearch}\index{OpenSearch}, desde donde el usuario es capaz de operar con ellos.
 
 %-------------------------------------------------------------------------------
 
