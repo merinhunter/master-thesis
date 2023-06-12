@@ -137,22 +137,14 @@ El \emph{backend}, sin embargo, sufre varios cambios. Como muestra la Figura~\re
 
 \section{Problemas encontrados}
 
-- Se tuvo que eliminar la inclusión de usuarios debido a la complejidad que añadía al sistema, y debido a que el tiempo dedicado no era suficiente.
+Durante el desarrollo del proyecto, surgieron algunas situaciones que dificultaron la finalización del mismo.
 
-- Demasiada ambición en los primeros prototipos, eso hizo que se ralentizara el desarrollo inicial.
+En una etapa temparana del desarrollo se pensó en incluir usuarios en la plataforma, cada uno de ellos con acceso únicamente a sus informes, gráficas y visualizaciones. Esto, añadido a la necesidad de incluir mecanismos de autenticación y autentificación a la API\index{API}, supuso añadir demasiada complejidad al proyecto y fue descartado por este motivo.
 
-- Se quiso usar en un principio Django, con sus templates, con un front-end, etc. Se decidió usar DRF por sus serializers, en conjunto con las templates de Django, pero estas no casaban muy bien. Esto causó bastante pérdida de tiempo.
+Se quiso utilizar, al comienzo, la versión estándar de \nameref{sec:django}\index{Django} incluyendo su sistema de \emph{templates}. Esto era debido a que la aplicación contaba en un principio con un \emph{frontend} con interfaz gráfica, la cual sería accesible desde un navegador web. Debido a las ventajas que suponía el uso de \nameref{sec:drf} (como el uso de \emph{serializers}) se decidió utilizar este para parte del \emph{backend}. Sin embargo, este módulo funcionaba de manera bastante mala con el sistema de templates de \nameref{sec:django}. Finalmente, se decidió continuar usando \nameref{sec:drf} y dejar de lado la interfaz gráfica.
 
-- GrimoireLab no soporta las versiones más modernas de OpenSearch.
+Uno de los ficheros que \nameref{sec:grimoirelab}\index{GrimoireLab} utiliza, el llamado fichero de configuración, utiliza un formato con una estructura muy similar al que puede encontrarse en los ficheros INI usados en Microsoft Windows. Este formato no es soportado de forma nativa por \nameref{sec:drf}, y causó varios retrasos tratando de implementar una solución para hacerlo viable. Finalmente, y con el fin de sacar el proyecto adelante, se decidió hacer que la API\index{API} devolviera el fichero con formato JSON\index{JSON} y luego, en el cliente, convertir este al formato necesario usando la librería \code{configparser}. Esto fue posible debido a que ambos formatos comparten similitudes que hacen viable su conversión.
 
-- Falta de conocimiento sobre los estudios de GrimoireLab
+Durante la última etapa del desarrollo, se quiso incluir una versión de Grimoirebots desarrollada con \nameref{sec:fastapi}\index{FastAPI}, con el fin de comparar este con \nameref{sec:drf}. Sin embargo, este prototipo nunca llegó a ver la luz por falta de tiempo, aunque se realizaron algunas pruebas que pueden encontrarse en \nameref{sec:github}\index{GitHub}\footnote{\url{https://github.com/merinhunter/grimoirebots-fastapi}}.
 
-- Lanzar contenedores desde un contenedor fue algo complicado.
-
-- Realizar el TFM a la vez que un trabajo que demanda mucho tiempo y esfuerzo.
-
-- Se quiso incluir paginación, pero se descartó por la complejidad que luego suponía en el cliente.
-
-- El envío del fichero setup.cfg fue un problema debido al formato. Al no ser JSON, DRF no lo podía devolver directamente. Se probaron varias cosas hasta que se decidió devolverlo en JSON y que fuera el cliente el que lo tradujera al formato necesario.
-
-- Se intentó realizar una comparativa entre DRF y FastAPI, pero se descartó por falta de tiempo. Se consiguió crear una versión muy básica de Grimoirebots, pero no funcional.
+Además de todo lo anterior, existieron otros pequeños problemas que ralentizaron el desarrollo del proyecto, como el intento de incluir paginación, la complejidad de ejecutar contenedores\index{Contenedor} desde otro contenedor, o la falta de documentación en algunos módulos de \nameref{sec:grimoirelab}. Sin embargo, todos estos incidentes tienen un alto valor didáctico, y su documentación permitirá no volver a cometerlos en el futuro.
