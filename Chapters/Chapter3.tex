@@ -8,6 +8,26 @@
 
 \section{Trabajo previo}
 
+Para entender el proceso de desarrollo que ha seguido este proyecto, es importante hacer un pequeño repaso al trabajo previo que se realizó en \nameref{sec:cauldron}\index{Cauldron} el cual, como se explicó en capítulos anteriores, motivó la realización de este proyecto.
+
+\nameref{sec:cauldron}\index{Cauldron} nace con la idea de facilitar el uso de \nameref{sec:grimoirelab}\index{GrimoireLab}, y permitir usar este a perfiles no técnicos. Es por ello que el desarrollo de este \emph{SaaS} comienza como una aplicación web, utilizando \nameref{sec:django}\index{Django} como base y Elasticsearch\index{Elasticsearch} y Kibana\index{Kibana} para el manejo de datos. \nameref{sec:cauldron}\index{Cauldron} comienza en sus inicios con pocas fuentes de datos disponibles, únicamente Git\index{Git}, aunque muy temprano comienza a incluir otras muchas como GitHub\index{GitHub}, GitLab, o Meetup, entre otras.
+
+\nameref{sec:cauldron}\index{Cauldron} está ideado para generar informes modificables. Esto quiere decir que un usuario puede, en un momento dado, solicitar el análisis de ciertas fuentes de datos, e.g., repositorios Git\index{Git}, y una vez terminado el análisis de esta incluir una nueva fuente de datos, como Meetup. Este esquema, si bien dota a la plataforma de mayor versatilidad, acarrea varios problemas en su desarrollo, ya que se necesitó realizar múltiples iteraciones en los modelos de la aplicación para conseguir que solo se analizaran las nuevas fuentes de datos, y no las ya analizadas.
+
+\nameref{sec:cauldron}\index{Cauldron} hace uso de un sistema de \emph{workers} para realizar los análisis. Cada uno de estos \emph{workers} es un contenedor personalizado de \nameref{sec:grimoirelab}\index{GrimoireLab}, el cual es utilizado gracias a su SDK para \nameref{sec:python}\index{Python}. Estos \emph{workers} están ejecutando continuamente, y se establece su número al comienzo del despliegue del \emph{cluster}. Las tareas de análisis que estos \emph{workers} realizan son gestionadas por un complejo componente personalizado conocido como \emph{Cauldron Pool Scheduler}, el cual realiza una asignación de recursos de análisis equitativa entre todos los usuarios de la plataforma. A pesar de los buenos resultados que este sistema genera, añade una excesiva complejidad a la asignación de tareas, lo que ha dificultado realizar cualquier tipo de modificación a este en el pasado.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/cauldron-metrics-charts}
+    \decoRule
+    \caption[Cauldron (Métricas)]{Métricas en Cauldron}
+    \label{fig:cauldron-metrics-charts}
+\end{figure}
+
+Además de las métricas y gráficas que \nameref{sec:cauldron}\index{Cauldron} ofrece a través de Elasticsearch\index{Elasticsearch} y Kibana\index{Kibana}, existen otras muchas en la página de cada análisis (Figura~\ref{fig:cauldron-metrics-charts}). El desarrollo de estas métricas y gráficas, usando la librería \code{Bokeh} para JavaScript, no estuvo exento de dificultad. Debido a la gran cantidad de datos que algunos análisis manejan, en ocasiones la recogida de estos datos desde el \emph{cluster} de Elasticsearch\index{Elasticsearch} hacía vencer un \emph{timeout} establecido, lo que provocaba el fallo de la página. Además de esto, la inclusión de datos en las gráficas añadía una excesiva complejidad al código, haciendo difícil su modificación.
+
+Estas y otras muchas situaciones originadas durante el desarrollo de \nameref{sec:cauldron}\index{Cauldron} (y su posterior mantenimiento) han resultado en un excelente valor didáctico, y han motivado varios de los objetivos que persigue este proyecto.
+
 %-------------------------------------------------------------------------------
 
 \section{Arquitectura del software}
