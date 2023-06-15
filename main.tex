@@ -49,6 +49,20 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 
+\usepackage{lmodern}  % for bold teletype font
+\usepackage{xcolor}   % for \textcolor
+\usepackage{listings} % Package to type bash commands
+\lstset{
+	basicstyle=\ttfamily,
+	columns=fullflexible,
+	frame=single,
+	showstringspaces=false,
+	breaklines=true,
+	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+	commentstyle=\color{gray},
+	keywordstyle=\color{blue},
+}
+
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
 %----------------------------------------------------------------------------------------
@@ -260,7 +274,7 @@ $\omega$ & angular frequency & \si{\radian} \\
 \include{Chapters/Chapter1}
 \include{Chapters/Chapter2}
 \include{Chapters/Chapter3}
-%\include{Chapters/Chapter4}
+\include{Chapters/Chapter4}
 %\include{Chapters/Chapter5}
 
 %----------------------------------------------------------------------------------------

@@ -1,0 +1,66 @@
+% Chapter 4: System Specifications
+
+\chapter{Especificaciones del sistema} % Main chapter title
+
+\label{Chapter4} % For referencing this chapter elsewhere, use \ref{Chapter4}
+
+%-------------------------------------------------------------------------------
+
+\section{Requisitos}
+
+En esta sección se describen todas las herramientas y \emph{software}\index{Software} que es necesario instalar en el sistema antes de la ejecución de Grimoirebots.
+
+\begin{itemize}
+    \item \textbf{Docker}\index{Docker} -- La ejecución de Grimoirebots se realiza usando contenedores Docker, por lo que su instalación es obligatoria. La instalación de Docker es diferente en función del Sistema Operativo utilizado, encontrándose una guía para los más utilizados en su página de documentación\footnote{\url{https://docs.docker.com/get-docker/}}.
+    \item \textbf{Docker Compose} -- La herramienta Docker Compose permite ejecutar varios contenedores\index{Contenedor} al mismo tiempo, gracias a ficheros de configuración. Su instalación es necesaria para la ejecución del \emph{cluster} de OpenSearch\index{OpenSearch} y de la base de datos PostgreSQL\index{PostgreSQL}. De nuevo, su instalación varía en función del Sistema Operativo, encontrándose una guía de instalación en su página de documentación\footnote{\url{https://docs.docker.com/compose/install/}}.
+\end{itemize}
+
+Al tratarse de una aplicación \emph{dockerizada}, todos los demás requisitos están incluidos en los contenedores\index{Contenedor}. A pesar de no ser necesaria su instalación, y simplemente para dar a conocerlos, estos son:
+
+\begin{itemize}
+    \item \textbf{Python}\index{Python} -- Para la ejecución tanto del servidor como del cliente se ha utilizado \code{Python 3.11}.
+    \item \textbf{Poetry}\index{Poetry} -- La gestión (e instalación) de paquetes en Grimoirebots se realiza con la versión más actualizada de esta herramienta.
+    \item \textbf{Dependencias de los proyectos Python} -- Esto incluye las últimas versiones disponibles de las librerías \code{Django}, \code{gunicorn}\index{Gunicorn}, \code{djangorestframework}, \code{psycopg}, \code{pyyaml}, \code{uritemplate}, \code{api-client} y \code{configparser}.
+    \item \textbf{PostgreSQL}\index{PostgreSQL} -- La base de datos SQL que utiliza Django\index{Django}. La versión que utiliza el proyecto es la 15.1.
+    \item \textbf{OpenSearch}\index{OpenSearch} -- Se utiliza para almacenar los resultados de los análisis con GrimoireLab\index{GrimoireLab}. La versión que utiliza el proyecto es la versión más actualizada de la versión 1\footnote{GrimoireLab no soporta versiones superiores a la 2, por lo que el proyecto está limitado por esta parte.}.
+    \item \textbf{OpenSearch Dashboards} -- Se utiliza la misma versión que para OpenSearch.
+\end{itemize}
+
+\section{Configuración}
+
+Antes de realizar el despliegue de la aplicación y sus componentes, es necesario configurar estos. En esta sección se detallan los pasos necesarios para preparar un entorno local para el despliegue de Grimoirebots\footnote{Se asume que el despligue se realizará en una máquina Linux local.}.
+
+Primero, es necesario descargar o clonar el repositorio de Grimoirebots:
+
+\begin{lstlisting}[language=bash]
+$ git clone https://github.com/merinhunter/grimoirebots.git
+\end{lstlisting}
+
+A continuación, se debe construir la imagen Docker:
+
+\begin{lstlisting}[language=bash]
+$ cd grimoirebots/
+$ docker build -t grimoirebots .
+\end{lstlisting}
+
+Una vez hecho esto, es necesario descargar o clonar el repositorio con los ficheros de configuración para desplegar Grimoirebots con Docker Compose:
+
+\begin{lstlisting}[language=bash]
+$ git clone https://github.com/merinhunter/grimoirebots-deployment.git
+\end{lstlisting}
+
+En este repositorio es posible encontrar ficheros YAML con la configuración para desplegar tanto la base de datos PostgreSQL como el servidor Django.
+
+Clonación del repo, configuración de variables para Django, configuración de otros ficheros, etc
+
+\section{Despliegue}
+
+Pasos para realizar el despliegue, esto es, comandos a ejecutar hasta tener un sistema funcional
+
+\section{Ejemplo de uso}
+
+\subsection{Creación de una petición de análisis}
+
+\subsection{Visualización de datos en OpenSearch}
+
+\section{Troubleshooting?}
