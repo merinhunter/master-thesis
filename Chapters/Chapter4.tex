@@ -36,7 +36,7 @@ Primero, es necesario descargar o clonar el repositorio de Grimoirebots:
 $ git clone https://github.com/merinhunter/grimoirebots.git
 \end{lstlisting}
 
-A continuación, se debe construir la imagen Docker:
+A continuación, se debe construir la imagen Docker\index{Docker}:
 
 \begin{lstlisting}[language=bash]
 $ cd grimoirebots/
@@ -49,17 +49,177 @@ Una vez hecho esto, es necesario descargar o clonar el repositorio con los fiche
 $ git clone https://github.com/merinhunter/grimoirebots-deployment.git
 \end{lstlisting}
 
-En este repositorio es posible encontrar ficheros YAML con la configuración para desplegar tanto la base de datos PostgreSQL como el servidor Django.
+En este repositorio es posible encontrar ficheros YAML con la configuración para desplegar tanto la base de datos PostgreSQL\index{PostgreSQL} como el servidor Django\index{Django}.
 
-Clonación del repo, configuración de variables para Django, configuración de otros ficheros, etc
+Los ficheros de configuración están preparados para funcionar una vez descargados, pero es recomendable modificar las claves por defecto en los siguientes ficheros:
+
+\begin{lstlisting}[language=bash]
+$ cd grimoirebots-deployment/
+$ vim grimoirebots/docker-compose.yml
+$ vim postgresql/docker-compose.yml
+\end{lstlisting}
+
+Las variables que se debe modificar son \code{DJANGO\_SECRET\_KEY} y \code{DATABASE\_PASSWORD}\footnote{Esta variable aparece dos veces en el fichero \code{grimoirebots/docker-compose.yml}.}.
+
+A continuación, es necesario descargar o clonar el repositorio del cliente de Grimoirebots:
+
+\begin{lstlisting}[language=bash]
+$ git clone https://github.com/merinhunter/grimoirebots-client.git
+\end{lstlisting}
+
+E igual que en pasos anteriores, construir la imagen Docker\index{Docker}:
+
+\begin{lstlisting}[language=bash]
+$ cd grimoirebots-client/
+$ docker build -t grimoirebots-client .
+\end{lstlisting}
+
+Por último, el \emph{cluster} de OpenSearch\index{OpenSearch} requiere que, en el \emph{host}, el valor de la variable \code{vm.max\_map\_count} sea de, al menos, 262144:
+
+\begin{lstlisting}[language=bash]
+$ sudo vim /etc/sysctl.conf
+
+# Include the following line at the end of the file
+vm.max_map_count=262144
+
+$ sudo sysctl -p
+\end{lstlisting}
 
 \section{Despliegue}
 
-Pasos para realizar el despliegue, esto es, comandos a ejecutar hasta tener un sistema funcional
+Una vez realizada la correcta configuración de todos los componentes, es posible llevar a cabo su despliegue. En esta sección se detallan todos los pasos necesarios para poner Grimoirebots en funcionamiento.
+
+El primer paso es poner en marcha el \emph{cluster} de OpenSearch\index{}:
+
+\begin{lstlisting}[language=bash]
+$ cd grimoirebots-deployment/opensearch/
+$ docker compose up -d
+\end{lstlisting}
+
+A continuación, se despliega la base de datos PostgreSQL\index{}:
+
+\begin{lstlisting}[language=bash]
+$ cd grimoirebots-deployment/postgresql/
+$ docker compose up -d
+\end{lstlisting}
+
+Se continúa con el despliegue del cliente de Grimoirebots:
+
+\begin{lstlisting}[language=bash]
+$ cd grimoirebots-deployment/grimoirebots-client/
+$ docker compose up -d
+\end{lstlisting}
+
+Y, finalmente, se despliega el servidor de Grimoirebots:
+
+\begin{lstlisting}[language=bash]
+$ cd grimoirebots-deployment/grimoirebots/
+$ docker compose up -d
+\end{lstlisting}
+
+En este punto, Grimoirebots debería estar escuchando peticiones en el \emph{endpoint} \code{http://localhost:8000}, y debería ser posible acceder a OpenSearch Dashboards en el \emph{endpoint} \code{http://localhost:5601}.
+
+Para comprobarlo, es posible realizar una petición al servidor a través de la terminal:
+
+\begin{lstlisting}[language=bash]
+$ curl http://localhost:8000
+openapi: 3.0.2
+info:
+  title: Grimoirebots
+  version: 0.1.0
+  description: Run GrimoireLab in the cloud!
+...
+\end{lstlisting}
+
+Accediendo a la dirección \code{http://localhost:5601} usando un navegador web, se debería ver la página de \emph{login} de OpenSearch Dashboards tal como aparece en la Figura~\ref{fig:opensearch-dashboards-login}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Figures/opensearch-dashboards-login}
+    \decoRule
+    \caption[OpenSearch Dashboards (\emph{Login})]{Página de \emph{login} en OpenSearch Dashboards}
+    \label{fig:opensearch-dashboards-login}
+\end{figure}
 
 \section{Ejemplo de uso}
 
+Para ilustrar el funcionamiento de Grimoirebots, en esta sección se va a mostrar un caso de uso en el que un usuario quiere analizar una serie de repositorios git\index{Git}, y después visualizar los datos generados en este análisis.
+
+Para ello se va a hacer uso de la herramienta \nameref{sec:postman}\index{Postman}, que permite realizar fácilmente peticiones HTTP\index{HTTP} a diferentes \emph{endpoints}.
+
 \subsection{Creación de una petición de análisis}
+
+El primer paso será realizar una petición POST al \emph{endpoint} \code{http://localhost:8000/\\orders/}, con la configuración del análisis en el campo \emph{body} de la solicitud (Figura~\ref{fig:example1}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/example1}
+    \decoRule
+    \caption[Grimoirebots (Creación de análisis)]{Creación de una solicitud de análisis en Grimoirebots}
+    \label{fig:example1}
+\end{figure}
+
+La solicitud dará como respuesta un \textbf{201 Created} (Figura~\ref{fig:example2}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/example2}
+    \decoRule
+    \caption[Grimoirebots (Respuesta de creación de análisis)]{Respuestas a la creación de una solicitud de análisis en Grimoirebots}
+    \label{fig:example2}
+\end{figure}
+
+Si se realiza una petición GET al \emph{endpoint} \code{http://localhost:8000/orders/\\<order\_id>}, sustituyendo \code{<order\_id>} por el identificador de la solicitud de análisis enviada, se puede obtener el objeto creado (Figura~\ref{fig:example3}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/example3}
+    \decoRule
+    \caption[Grimoirebots (Solicitud de análisis)]{Solicitud de análisis en Grimoirebots}
+    \label{fig:example3}
+\end{figure}
+
+Y realizando una petición GET a los \emph{endpoints} \code{http://localhost:8000/orders/\\<order\_id>/projects.json} y \code{http://localhost:8000/orders/<order\_id>/\\setup.cfg} se pueden obtener los ficheros de configuración de \nameref{sec:grimoirelab}\index{GrimoireLab} para el análisis (Figura~\ref{fig:example4} y Figura~\ref{fig:example5}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/example4}
+    \decoRule
+    \caption[Análisis en Grimoirebots (Fichero de repositorios)]{Fichero de repositorios de un análisis en Grimoirebots}
+    \label{fig:example4}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/example5}
+    \decoRule
+    \caption[Análisis en Grimoirebots (Fichero de configuración)]{Fichero de configuración de un análisis en Grimoirebots}
+    \label{fig:example5}
+\end{figure}
+
+A continuación, el cliente de Grimoirebots solicitará al servidor estos ficheros. Se pueden comprobar los logs del contenedor para asegurarnos de ello:
+
+\begin{lstlisting}[language=bash]
+$ docker logs grimoirebots-client
+\end{lstlisting}
+
+Y una vez que el cliente haya comenzado el análisis, se puede realizar una petición GET al \emph{endpoint} \code{http://localhost:8000/reports/} para comprobar que existe un informe asociado a la petición inicial (Figura~\ref{fig:example6}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/example6}
+    \decoRule
+    \caption[Grimoirebots (Informe)]{Informe en Grimoirebots}
+    \label{fig:example6}
+\end{figure}
+
+A partir de este momento, el análisis se está llevando a cabo en un contenedor de \nameref{sec:grimoirelab}\index{GrimoireLab}. El seguimiento de este análisis se puede realizar revisando en tiempo real los logs del contenedor, necesitando localizar a este primero:
+
+\begin{lstlisting}[language=bash]
+$ docker ps
+
+$ docker logs -f
+\end{lstlisting}
 
 \subsection{Visualización de datos en OpenSearch}
 
