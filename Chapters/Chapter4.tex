@@ -201,6 +201,17 @@ A continuación, el cliente de Grimoirebots solicitará al servidor estos ficher
 
 \begin{lstlisting}[language=bash]
 $ docker logs grimoirebots-client
+2023-06-18 17:00:54,511 - INFO - Retrieving pending orders from http://localhost:8000
+2023-06-18 17:00:54,523 - INFO - Retrieved 1 orders
+2023-06-18 17:00:54,523 - INFO - Processing order 177a6623-0499-4175-be29-68a738bb6bf5
+2023-06-18 17:00:54,523 - INFO - Retrieving projects.json for order 177a6623-0499-4175-be29-68a738bb6bf5
+2023-06-18 17:00:54,536 - INFO - File projects.json for order 177a6623-0499-4175-be29-68a738bb6bf5 saved at reports/177a6623-0499-4175-be29-68a738bb6bf5/projects.json
+2023-06-18 17:00:54,536 - INFO - Retrieving setup.cfg for order 177a6623-0499-4175-be29-68a738bb6bf5
+2023-06-18 17:00:54,550 - INFO - File setup.cfg for order 177a6623-0499-4175-be29-68a738bb6bf5 saved at reports/177a6623-0499-4175-be29-68a738bb6bf5/setup.cfg
+2023-06-18 17:00:54,550 - INFO - Starting GrimoireLab container
+2023-06-18 17:00:54,676 - INFO - Analysis for 177a6623-0499-4175-be29-68a738bb6bf5 has finished
+2023-06-18 17:00:54,676 - INFO - Creating report for order 177a6623-0499-4175-be29-68a738bb6bf5
+2023-06-18 17:00:54,690 - INFO - Report 9ddf60a6-964f-41d5-9493-f058cbdc2c41 created for order 177a6623-0499-4175-be29-68a738bb6bf5
 \end{lstlisting}
 
 Y una vez que el cliente haya comenzado el análisis, se puede realizar una petición GET al \emph{endpoint} \code{http://localhost:8000/reports/} para comprobar que existe un informe asociado a la petición inicial (Figura~\ref{fig:example6}).
@@ -217,10 +228,69 @@ A partir de este momento, el análisis se está llevando a cabo en un contenedor
 
 \begin{lstlisting}[language=bash]
 $ docker ps
+CONTAINER ID   IMAGE    ...    NAMES
+b0a1f6acf822   grimoirelab/grimoirelab:0.10.0 ... grimoirelab-177a6623-0499-4175-be29-68a738bb6bf5
+...
 
-$ docker logs -f
+$ docker logs -f grimoirelab-177a6623-0499-4175-be29-68a738bb6bf5
+2023-06-18 17:00:55,882 - sirmordred.sirmordred - INFO -
+2023-06-18 17:00:55,882 - sirmordred.sirmordred - INFO - ----------------------------
+2023-06-18 17:00:55,882 - sirmordred.sirmordred - INFO - Starting SirMordred engine ...
+2023-06-18 17:00:55,882 - sirmordred.sirmordred - INFO - ----------------------------
+2023-06-18 17:00:55,885 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): localhost:9200
+...
 \end{lstlisting}
 
 \subsection{Visualización de datos en OpenSearch}
 
-\section{Troubleshooting?}
+Una vez que el análisis con \nameref{sec:grimoirelab}\index{GrimoireLab} haya concluido, es posible visualizar los datos del análisis y construir gráficos y métricas con ellos accediendo a \nameref{sec:opensearch}\index{OpenSearch} Dashboards. Este servicio debería estar disponible navegando a la dirección \code{http://\\localhost:5601} con un navegador web.
+
+Las credenciales por defecto son \textbf{admin} para el usuario y la contraseña. Al acceder, lo primero que se pedirá es seleccionar el \emph{tenant} de trabajo. Para el ejemplo se seleccionará el \emph{tenant} global (Figura~\ref{fig:opensearch-tenant}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/opensearch-tenant.png}
+    \decoRule
+    \caption[OpenSearch (Selección de \emph{tenant})]{Selección de \emph{tenant} en OpenSearch}
+    \label{fig:opensearch-tenant}
+\end{figure}
+
+Si se accede a la sección \code{Index Management / Indices} es posible comprobar que existen algunos índices originados por \nameref{sec:grimoirelab}\index{GrimoireLab}, como \code{git\_demo\_raw} o \code{git\_demo\_\\enriched} (Figura~\ref{fig:opensearch-indices}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/opensearch-indices.png}
+    \decoRule
+    \caption[OpenSearch (Índices)]{Índices en OpenSearch}
+    \label{fig:opensearch-indices}
+\end{figure}
+
+Para visualizar los datos, es necesario primero crear un \emph{index pattern}. Esto sirve para que \nameref{sec:opensearch}\index{OpenSearch} sepa qué campos de los documentos debe utilizar en la indexación de la información. Para ello, se debe hacer clic en la pestaña \emph{Discover}, en la barra lateral, desde donde se solicitará la creación de un \emph{index pattern}. Para este ejemplo se utilizará como \emph{index pattern} el valor \code{git}, que concuerda con uno de los índices existentes (Figura~\ref{fig:opensearch-index-pattern-creation}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/opensearch-index-pattern-creation.png}
+    \decoRule
+    \caption[OpenSearch (Creación de \emph{Index Pattern})]{Creación de \emph{Index Pattern} en OpenSearch}
+    \label{fig:opensearch-index-pattern-creation}
+\end{figure}
+
+Como campo temporal se utilizará el campo \code{utc\_commit}, que corresponde con la hora UTC en la que cada \emph{commit} se realizó (Figura~\ref{fig:opensearch-index-pattern-timestamp}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/opensearch-index-pattern-timestamp.png}
+    \decoRule
+    \caption[OpenSearch (Creación de \emph{Index Pattern}) Cont.]{Creación de \emph{Index Pattern} en OpenSearch (Cont.)}
+    \label{fig:opensearch-index-pattern-timestamp}
+\end{figure}
+
+Una vez creado el \emph{index pattern}, es posible hacer clic en \emph{Discover} y visualizaer algunos de los datos generados por el análisis. Si se ajusta la fecha al último año, se obtiene una serie temporal con los \emph{commits} realizados en los diferentes repositorios analizados a lo largo del último año (Figura~\ref{fig:opensearch-discover}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/opensearch-discover.png}
+    \decoRule
+    \caption[OpenSearch (Sección \emph{Discover})]{Sección \emph{Discover} en OpenSearch}
+    \label{fig:opensearch-discover}
+\end{figure}
