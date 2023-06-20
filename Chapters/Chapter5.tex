@@ -8,10 +8,58 @@
 
 \section{Consecución de objetivos}
 
+Los objetivos propuestos al comienzo del proyecto eran:
+
+\begin{itemize}
+    \item Desarrollar un sistema que genere informes inalterables, creando un flujo más simple desde la solicitud por parte del usuario al \emph{output} de la aplicación.
+    \item Desarrollar varios componentes \emph{software}\index{software} independientes que colaboren entre ellos para dar un servicio al usuario.
+    \item Simplificar el uso de GrimoireLab\index{GrimoireLab} mediante la ejecución del contenedor Docker\index{Docker} original de GrimoireLab.
+    \item Realizar varias mejoras menores respecto a Cauldron\index{Cauldron}.
+\end{itemize}
+
+Estos objetivos se han llevado a cabo de manera satisfactoria. El sistema desarrollado permite el análisis de repositorios \emph{software}\index{software} utilizando un esquema de informes inalterables y con una arquitectura descapolada entre sus componentes.
+
+Sin embargo, el objetivo principal que perseguía este proyecto era también el desarrollo de un sistema que mejorase las prestaciones de Cauldron\index{Cauldron}. Este objetivo no se ha cumplido: Cauldron ofrece muchas más características que Grimoirebots a día de hoy, como la existencia de usuarios, la comparación de análisis o un mayor número de fuentes de datos disponible.
+
 %----------------------------------------------------------------------------------------
 
 \section{Conocimientos adquiridos}
 
+Desde la concepción del proyecto hasta la finalización de esta memoria, el autor ha estado inmerso en un continuo aprendizaje. A pesar de tener un conocimiento previo en la mayoría de las tecnologías utilizadas, otras han resultado un descubrimiento y una ampliación en experiencia y sabiduría.
+
+Los conocimientos adquiridos más relevantes son:
+
+\begin{itemize}
+    \item Reforzar y ampliar el conocimiento sobre el desarrollo de APIs REST mediante el estudio y uso herramientas novedosas en la creación de APIs REST como Django REST Framework o FastAPI, así como el estudio e investigación del estándar OpenAPI.
+    \item Profundizar en el desarrollo de contenedores con Docker, al tener que elaborar esquemas de funcionamiento complejos con estos.
+    \item Mejorar la destreza en el desarrollo de código con Python, mediante la escritura de código más limpio y más manejable.
+    \item Aprender como funcionan las arquitecturas de \emph{software} con componentes desacoplados, al haber diseñado e implementado los diferentes servicios que componen el sistema.
+    \item Ampliar el conocimiento sobre GrimoireLab, mediante el estudio avanzado de todas sus herramientas, su configuración y su ejecución.
+    \item Realizar la gestión del tiempo durante el desarrollo del proyecto para cumplir los plazos de entrega.
+\end{itemize}
+
+Todo el conocimiento y experiencia adquiridos me ha permitido comprender mejor el mundo del desarrollo web y las arquitecturas de \emph{software} desacopladas. Aunque esperaba haber dotado al sistema de mayor funcionalidad, me quedo con haber sentado las bases de lo que será una gran herramienta para la analítica del desarrollo de \emph{software} en el futuro.
+
 %----------------------------------------------------------------------------------------
 
 \section{Líneas de desarrollo futuras}
+
+Las líneas de desarrollo futuras se centran en mejorar algunas de las prestaciones de Cauldron\index{Cauldron} que se quedaron fuera del alcance original del proyecto.
+
+Utilizar un sistema de colas con prioridades para la realización de los análisis simplificaría bastante el desarrollo necesario para la asignación de tareas, ya que existen componentes creados por terceros pensados para este propósito.
+
+Permitir la creación de usuarios pero, a diferencia de Cauldron\index{Cauldron}, que la autenticación no esté asociada a una fuente de datos, como GitHub\index{GitHub} o Meetup. Django\index{Django} posee un sistema de gestión de usuarios muy sencillo y robusto, y permite extender los modelos básicos con mucha facilidad.
+
+Utilizar y aprovechar las herramientas que ofrecen las plataformas \emph{Cloud} podría mejorar el rendimiento general de la aplicación y reducir sus costes de operación. Servicios y herramientas como \emph{AWS Lambda}, \emph{AWS Fargate}, o \emph{AWS RDS} podrían ser opciones válidas con las especificaciones originales del proyecto.
+
+Desarrollar una interfaz de usuario que facilite el uso del servicio. Para preservar el principio de tener componentes desacoplados, esta interfaz debería ser desarrollada de manera independiente al \emph{backend}, y debería interaccionar con este mediante llamadas a la API\index{} de Grimoirebots. Para hacerlo más interesante, este \emph{frontend} debería diseñarse como un conjunto de páginas estáticas, las cuales conllevan mucho menor gasto operativo, al no necesitar un servidor que procese las solicitudes.
+
+Por último, la inclusión de mecanismos de Integración Continua y Despliegue Continuo permitiría un mayor rendimiento y eficacia en el desarrollo de cada uno de los componentes, al reducir los tiempos de entrega y limitar el error humano.
+
+Todo el código utilizado en este Trabajo de Fin de Máster está disponible en los siguientes repositorios de GitHub\index{GitHub}:
+
+\begin{itemize}
+    \item \url{https://github.com/merinhunter/grimoirebots}
+    \item \url{https://github.com/merinhunter/grimoirebots-client}
+    \item \url{https://github.com/merinhunter/grimoirebots-deployment}
+\end{itemize}
