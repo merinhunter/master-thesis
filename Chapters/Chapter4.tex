@@ -1,12 +1,24 @@
-% Chapter 4: System Specifications
+% Chapter 4: Results
 
-\chapter{Especificaciones del sistema} % Main chapter title
+\chapter{Resultados} % Main chapter title
 
 \label{Chapter4} % For referencing this chapter elsewhere, use \ref{Chapter4}
 
 %-------------------------------------------------------------------------------
 
-\section{Requisitos}
+\section{Especificaciones del sistema}
+
+En esta sección se detallan las especificaciones del sistema resultante tras desarrollo del proyecto. Se detallan las prestaciones de este, así como los modelos de datos finales, y las entradas y salidas.
+
+\subsection{Definición y funcionalidades}
+
+\textbf{Grimoirebots} es el resultado del desarrollo expuesto en el Capítulo~{\ref{Chapter3}}. Se trata de un complejo sistema de análisis de repositorios git que, de forma automática, obtiene y genera datos sobre el desarrollo de \emph{software}, permitiendo su uso mediante la creación de métricas y gráficas.
+
+%-------------------------------------------------------------------------------
+
+\section{Despliegue}
+
+\subsection{Requisitos}
 
 En esta sección se describen todas las herramientas y \emph{software}\index{Software} que es necesario instalar en el sistema antes de la ejecución de Grimoirebots.
 
@@ -26,7 +38,7 @@ Al tratarse de una aplicación \emph{dockerizada}, todos los demás requisitos e
     \item \textbf{OpenSearch Dashboards} -- Se utiliza la misma versión que para OpenSearch.
 \end{itemize}
 
-\section{Configuración}
+\subsection{Configuración}
 
 Antes de realizar el despliegue de la aplicación y sus componentes, es necesario configurar estos. En esta sección se detallan los pasos necesarios para preparar un entorno local para el despliegue de Grimoirebots\footnote{Se asume que el despliegue se realizará en una máquina Linux local.}.
 
@@ -85,7 +97,7 @@ vm.max_map_count=262144
 $ sudo sysctl -p
 \end{lstlisting}
 
-\section{Despliegue}
+\subsection{Despliegue de componentes}
 
 Una vez realizada la correcta configuración de todos los componentes, es posible llevar a cabo su despliegue. En esta sección se detallan todos los pasos necesarios para poner Grimoirebots en funcionamiento.
 

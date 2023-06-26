@@ -6,15 +6,25 @@
 
 %-------------------------------------------------------------------------------
 
-\section{Trabajo previo}
+\section{Arquitectura del software}
 
-Para entender el proceso de desarrollo que ha seguido este proyecto, es importante hacer un pequeño repaso al trabajo previo que se realizó en \nameref{sec:cauldron}\index{Cauldron} el cual, como se explicó en capítulos anteriores, motivó la realización de este proyecto.
+El objetivo de este proyecto es proporcionar un servicio que permita analizar proyectos \emph{software}\index{software} de una manera sencilla y automatizada. Para ello, se ha llevado a cabo el desarrollo de varios \emph{sprints}, cada uno resolviendo los problemas descubiertos en el anterior:
+
+\begin{itemize}
+    \item El primer \emph{sprint} se centra en realizar un análisis de \nameref{sec:cauldron}\index{Cauldron}, una herramienta ya existente para el análisis de ecosistemas de desarrollo de \emph{software}.
+    \item En el segundo \emph{sprint} se recogen las lecciones aprendidas en el anterior y se centra en el desarrollo de un primer prototipo que siente las bases de la arquitectura de la aplicación. En este prototipo, la API\index{API} consta de algunas llamadas básicas para la creación de solicitudes de análisis y el cliente es capaz de procesarlas y retornar este resultado al usuario.
+    \item El tercer y último \emph{sprint} recoge el testigo del anterior y se centra en la integración de la API con \nameref{sec:grimoirelab}\index{GrimoireLab} y \nameref{sec:opensearch}\index{OpenSearch}. En este nuevo prototipo, la API\index{API} incluye nuevas estructuras y llamadas y el cliente ejecuta tareas de análisis con GrimoireLab y sube los resultados a OpenSearch para su visionado.
+\end{itemize}
+
+\subsection{Sprint 0: Etapa de análisis}
+
+Durante la primera etapa que comprende el desarrollo de este proyecto, se ha realizado un análisis de la herramienta \nameref{sec:cauldron}\index{Cauldron}, de su proceso de desarrollo, funcionalidades y puntos de mejora, los cuales han servido como inspiración para las posteriores etapas. Se trata de una etapa de aprendizaje que sienta las bases del resto del desarrollo.
 
 \nameref{sec:cauldron}\index{Cauldron} nace con la idea de facilitar el uso de \nameref{sec:grimoirelab}\index{GrimoireLab}, y permitir usar este a perfiles no técnicos. Es por ello que el desarrollo de este \emph{SaaS} comienza como una aplicación web, utilizando \nameref{sec:django}\index{Django} como base y Elasticsearch\index{Elasticsearch} y Kibana\index{Kibana} para el manejo de datos. \nameref{sec:cauldron}\index{Cauldron} comienza en sus inicios con pocas fuentes de datos disponibles, únicamente Git\index{Git}, aunque muy temprano comienza a incluir otras muchas como GitHub\index{GitHub}, GitLab, o Meetup, entre otras.
 
-\nameref{sec:cauldron}\index{Cauldron} está ideado para generar informes modificables. Esto quiere decir que un usuario puede, en un momento dado, solicitar el análisis de ciertas fuentes de datos, e.g., repositorios Git\index{Git}, y una vez terminado el análisis de esta incluir una nueva fuente de datos, como Meetup. Este esquema, si bien dota a la plataforma de mayor versatilidad, acarrea varios problemas en su desarrollo, ya que se necesitó realizar múltiples iteraciones en los modelos de la aplicación para conseguir que solo se analizaran las nuevas fuentes de datos, y no las ya analizadas.
+\nameref{sec:cauldron}\index{Cauldron} está ideado para generar informes modificables. Esto quiere decir que un usuario puede, en un momento dado, solicitar el análisis de ciertas fuentes de datos, e.g., repositorios Git\index{Git}, y una vez terminado el análisis de esta incluir una nueva fuente de datos, como Meetup. Este esquema, si bien dota a la plataforma de mayor versatilidad, acarrea varios problemas en su desarrollo y mantenimiento. Durante el desarrollo de esta característica se necesitó realizar múltiples iteraciones en los modelos de la aplicación para conseguir que solo se analizaran las nuevas fuentes de datos, y no las ya analizadas. Estas iteraciones han resultado en un esquema de modelos complejo que hace difícil su modificación.
 
-\nameref{sec:cauldron}\index{Cauldron} hace uso de un sistema de \emph{workers} para realizar los análisis. Cada uno de estos \emph{workers} es un contenedor personalizado de \nameref{sec:grimoirelab}\index{GrimoireLab}, el cual es utilizado gracias a su SDK para \nameref{sec:python}\index{Python}. Estos \emph{workers} están ejecutando continuamente, y se establece su número al comienzo del despliegue del \emph{cluster}. Las tareas de análisis que estos \emph{workers} realizan son gestionadas por un complejo componente personalizado conocido como \emph{Cauldron Pool Scheduler}, el cual realiza una asignación de recursos de análisis equitativa entre todos los usuarios de la plataforma. A pesar de los buenos resultados que este sistema genera, añade una excesiva complejidad a la asignación de tareas, lo que ha dificultado realizar cualquier tipo de modificación a este en el pasado.
+\nameref{sec:cauldron}\index{Cauldron} hace uso de un sistema de \emph{workers} para realizar los análisis. Cada uno de estos \emph{workers} es un contenedor personalizado de \nameref{sec:grimoirelab}\index{GrimoireLab}, el cual utiliza el SDK de GrimoireLab para \nameref{sec:python}\index{Python} en la ejecución de los análisis. Estos \emph{workers} se están ejecutando continuamente, y se establece su número al comienzo del despliegue del \emph{cluster} de \emph{workers}. Las tareas de análisis que estos \emph{workers} realizan son gestionadas por un complejo componente personalizado conocido como \emph{Cauldron Pool Scheduler}, el cual realiza una asignación de recursos de análisis equitativa entre todos los usuarios de la plataforma. A pesar de los buenos resultados que este sistema genera, añade una excesiva complejidad a la asignación de tareas, lo que dificulta realizar cualquier tipo de modificación o mantenimiento a este.
 
 \begin{figure}[ht]
     \centering
@@ -24,24 +34,13 @@ Para entender el proceso de desarrollo que ha seguido este proyecto, es importan
     \label{fig:cauldron-metrics-charts}
 \end{figure}
 
-Además de las métricas y gráficas que \nameref{sec:cauldron}\index{Cauldron} ofrece a través de Elasticsearch\index{Elasticsearch} y Kibana\index{Kibana}, existen otras muchas en la página de cada análisis (Figura~\ref{fig:cauldron-metrics-charts}). El desarrollo de estas métricas y gráficas, usando la librería \code{Bokeh} para JavaScript, no estuvo exento de dificultad. Debido a la gran cantidad de datos que algunos análisis manejan, en ocasiones la recogida de estos datos desde el \emph{cluster} de Elasticsearch\index{Elasticsearch} hacía vencer un \emph{timeout} establecido, lo que provocaba el fallo de la página. Además de esto, la inclusión de datos en las gráficas añadía una excesiva complejidad al código, haciendo difícil su modificación.
+Además de las métricas y gráficas que \nameref{sec:cauldron}\index{Cauldron} ofrece a través de Elasticsearch\index{Elasticsearch} y Kibana\index{Kibana}, existen otras muchas en la página de cada análisis (Figura~\ref{fig:cauldron-metrics-charts}). Estas están desarrolladas usando la librería \code{Bokeh} para JavaScript, la cual añade una excesiva complejidad al código al necesitar incluir grandes bloques a las plantillas de Django. Además de esto, debido a la gran cantidad de datos que algunos análisis manejan, en ocasiones la recogida de estos datos desde el \emph{cluster} de Elasticsearch\index{Elasticsearch} hace vencer un \emph{timeout} establecido, lo que provoca el fallo de la página.
 
-Estas y otras muchas situaciones originadas durante el desarrollo de \nameref{sec:cauldron}\index{Cauldron} (y su posterior mantenimiento) han resultado en un excelente valor didáctico, y han motivado varios de los objetivos que persigue este proyecto.
+Este análisis, sumado a la experiencia durante el desarrollo y mantenimiento de \nameref{sec:cauldron}\index{Cauldron} han resultado en un excelente valor didáctico, y han motivado varios de los objetivos que persigue este proyecto, los cuales serán desarrollados en los siguientes \emph{sprints}.
 
-%-------------------------------------------------------------------------------
+\subsection{Sprint 1: Grimoirebots I}
 
-\section{Arquitectura del software}
-
-El objetivo de este proyecto es proporcionar un servicio que permita analizar proyectos \emph{software}\index{software} de una manera sencilla y automatizada. Para ello, se ha llevado a cabo el desarrollo de varios prototipos:
-
-\begin{itemize}
-    \item El primer prototipo sienta las bases de la arquitectura de la aplicación. La API\index{API} consta de algunas llamadas básicas para la creación de solicitudes de análisis y el cliente es capaz de procesarlas y retornar este resultado al usuario.
-    \item El segundo prototipo añade \nameref{sec:grimoirelab}\index{GrimoireLab} y \nameref{sec:opensearch}\index{OpenSearch} al esquema de la aplicación. La API\index{API} incluye nuevas estructuras y llamadas y el cliente ejecuta tareas de análisis con GrimoireLab y sube los resultados a OpenSearch para su visionado.
-\end{itemize}
-
-\subsection{Grimoirebots I}
-
-El primer prototipo de la aplicación está creado utilizando el framework \nameref{sec:drf}\index{Django} para \nameref{sec:python}\index{Python}, y \nameref{sec:poetry}\index{Poetry} como gestor de paquetes y dependencias. Esta primera versión establece la arquitectura base de la aplicación y el esquema de comunicación entre servidor y cliente.
+El primer prototipo de la aplicación está creado utilizando el \emph{framework} \nameref{sec:drf}\index{Django} para \nameref{sec:python}\index{Python}, y \nameref{sec:poetry}\index{Poetry} como gestor de paquetes y dependencias. Esta primera versión establece la arquitectura base de la aplicación y el esquema de comunicación entre servidor y cliente.
 
 Para este fin, se han desarrollado los siguientes modelos\footnote{Los campos no obligatorios aparecen coloreados en gris.}:
 
@@ -75,7 +74,7 @@ También se han desarrollado los siguientes \emph{paths} en la API\index{API}:
 
 Adicionalmente, se ha creado una imagen \nameref{sec:docker}\index{Docker} que instala las dependencias del proyecto y lo lanza utilizando \nameref{sec:gunicorn}\index{Gunicorn} como servidor WSGI, y se ha incluido el uso de \nameref{sec:dependabot}\index{Dependabot} para la comprobación de cualquier actualización en las dependencias del proyecto y avisar de esto al equipo desarrollador.
 
-Por otra parte, el cliente o bot automático es una aplicación escrita en \nameref{sec:python}\index{Python} que, haciendo uso de la librería \code{apiclient}, recoge periódicamente aquellas solicitudes pendientes de procesar y realiza un procesamiento básico de ellas. En esta parte del desarrollo aún no se había incluido \nameref{sec:grimoirelab}\index{GrimoireLab}, por lo que el procesamiento que el cliente hace de la solicitud es la construcción de un \emph{string} que contiene el identificador y el repositorio de la solicitud.
+Por otra parte, en este \emph{sprint} también se ha desarrollado el cliente (o bot automático) de Grimoirebots, que es una aplicación escrita en \nameref{sec:python}\index{Python} que, haciendo uso de la librería \code{apiclient}, recoge periódicamente aquellas solicitudes pendientes de procesar y realiza un procesamiento básico de ellas. En esta parte del desarrollo aún no se había incluido \nameref{sec:grimoirelab}\index{GrimoireLab}, por lo que el procesamiento que el cliente hace de la solicitud es la construcción de un \emph{string} que contiene el identificador y el repositorio de la solicitud.
 
 Para ilustrar el comportamiento de este prototipo, se han creado las siguientes infografías:
 
@@ -99,9 +98,9 @@ Como muestra la Figura~\ref{fig:grimoirebots_frontend}, el usuario crea nuevas s
 
 Por su parte, en la Figura~\ref{fig:grimoirebots_i_backend} se incluyen las interacciones que realiza el cliente con la API\index{API} para procesar las solicitudes de los usuarios. Periódicamente, el cliente pide al servidor las solicitudes que aún no hayan sido procesadas. Por cada una de estas, pide el repositorio solicitado para analizar haciendo una llamada GET a \code{/orders/<uuid>/projects.json}. Posteriormente, realiza el procesamiento básico comentado anteriormente y realiza una llamada POST a \code{/reports/} para crear el informe y asociarlo con la solicitud del usuario.
 
-\subsection{Grimoirebots II}
+\subsection{Sprint 2: Grimoirebots II}
 
-El segundo (y último) prototipo utiliza las mismas tecnologías mencionadas en el prototipo anterior, y algunas añadidas. Como gran aditivo, en este prototipo se incluye el uso de \nameref{sec:grimoirelab}\index{GrimoireLab} y \nameref{sec:opensearch}\index{OpenSearch} para realizar el análisis de proyectos \emph{software}\index{Software}.
+Durante este \emph{sprint} se utilizan las mismas tecnologías mencionadas en el anterior, y algunas añadidas, para el desarrollo de un nuevo prototipo. Como gran aditivo, en este prototipo se incluye el uso de \nameref{sec:grimoirelab}\index{GrimoireLab} y \nameref{sec:opensearch}\index{OpenSearch} para realizar el análisis de proyectos \emph{software}\index{Software}.
 
 Debido a esto, este prototipo actualiza los modelos de la aplicación de la siguiente forma\footnote{Igual que en el apartado anterior, los campos no obligatorios aparecen coloreados en gris.}:
 
@@ -155,16 +154,28 @@ El \emph{backend}, sin embargo, sufre varios cambios. Como muestra la Figura~\re
 
 %-------------------------------------------------------------------------------
 
-\section{Problemas encontrados}
+\section{Problemas encontrados}\label{problemas-encontrados}
 
 Durante el desarrollo del proyecto, surgieron algunas situaciones que dificultaron la finalización del mismo.
 
-En una etapa temprana del desarrollo se pensó en incluir usuarios en la plataforma, cada uno de ellos con acceso únicamente a sus informes, gráficas y visualizaciones. Esto, añadido a la necesidad de incluir mecanismos de autenticación a la API\index{API}, supuso añadir demasiada complejidad al proyecto y fue descartado por este motivo.
+Se quiso utilizar, al comienzo, la versión estándar de \nameref{sec:django}\index{Django} incluyendo su sistema de \emph{templates}. Esto era debido a que la aplicación contaba en un principio con un \emph{frontend} con interfaz gráfica, la cual sería accesible desde un navegador web. Debido a las ventajas que suponía el uso de \nameref{sec:drf} (como el uso de \emph{serializers}) se decidió utilizar este para parte del \emph{backend}. Sin embargo, este módulo funcionaba de manera bastante mala con el sistema de \emph{templates} de \nameref{sec:django}. Finalmente, se decidió continuar usando \nameref{sec:drf} y dejar de lado la interfaz gráfica, debido a la gran ventaja que suponía el primero frente al segundo.
 
-Se quiso utilizar, al comienzo, la versión estándar de \nameref{sec:django}\index{Django} incluyendo su sistema de \emph{templates}. Esto era debido a que la aplicación contaba en un principio con un \emph{frontend} con interfaz gráfica, la cual sería accesible desde un navegador web. Debido a las ventajas que suponía el uso de \nameref{sec:drf} (como el uso de \emph{serializers}) se decidió utilizar este para parte del \emph{backend}. Sin embargo, este módulo funcionaba de manera bastante mala con el sistema de templates de \nameref{sec:django}. Finalmente, se decidió continuar usando \nameref{sec:drf} y dejar de lado la interfaz gráfica.
+Uno de los ficheros que \nameref{sec:grimoirelab}\index{GrimoireLab} utiliza, el llamado fichero de configuración, utiliza un formato con una estructura muy similar al que puede encontrarse en los ficheros INI usados en Microsoft Windows. Este formato no es soportado de forma nativa por \nameref{sec:drf}, y causó varios retrasos tratando de implementar una solución para hacerlo viable. Finalmente se decidió hacer que la API\index{API} devolviera el fichero con formato JSON\index{JSON} y luego, en el cliente, convertir este al formato necesario usando la librería \code{configparser}. Esto fue posible debido a que ambos formatos comparten similitudes que hacen viable su conversión.
 
-Uno de los ficheros que \nameref{sec:grimoirelab}\index{GrimoireLab} utiliza, el llamado fichero de configuración, utiliza un formato con una estructura muy similar al que puede encontrarse en los ficheros INI usados en Microsoft Windows. Este formato no es soportado de forma nativa por \nameref{sec:drf}, y causó varios retrasos tratando de implementar una solución para hacerlo viable. Finalmente, y con el fin de sacar el proyecto adelante, se decidió hacer que la API\index{API} devolviera el fichero con formato JSON\index{JSON} y luego, en el cliente, convertir este al formato necesario usando la librería \code{configparser}. Esto fue posible debido a que ambos formatos comparten similitudes que hacen viable su conversión.
+Durante la última etapa del desarrollo, se quiso realizar una implementación de Grimoirebots desarrollada con \nameref{sec:fastapi}\index{FastAPI}, con el fin de comparar este con \nameref{sec:drf}. Sin embargo, este prototipo nunca llegó a ver la luz por complicaciones en su desarrollo, aunque se realizaron algunas pruebas que pueden encontrarse en \nameref{sec:github}\index{GitHub}\footnote{\url{https://github.com/merinhunter/grimoirebots-fastapi}}.
 
-Durante la última etapa del desarrollo, se quiso incluir una versión de Grimoirebots desarrollada con \nameref{sec:fastapi}\index{FastAPI}, con el fin de comparar este con \nameref{sec:drf}. Sin embargo, este prototipo nunca llegó a ver la luz por falta de tiempo, aunque se realizaron algunas pruebas que pueden encontrarse en \nameref{sec:github}\index{GitHub}\footnote{\url{https://github.com/merinhunter/grimoirebots-fastapi}}.
+Además de todo lo anterior, existieron otros pequeños problemas que ralentizaron el desarrollo del proyecto, como la complejidad de ejecutar contenedores\index{Contenedor} desde otro contenedor, o la falta de documentación en algunos módulos de \nameref{sec:grimoirelab}. Sin embargo, todos estos incidentes tienen un alto valor didáctico, y su documentación permitirá no volver a cometerlos en el futuro.
 
-Además de todo lo anterior, existieron otros pequeños problemas que ralentizaron el desarrollo del proyecto, como el intento de incluir paginación, la complejidad de ejecutar contenedores\index{Contenedor} desde otro contenedor, o la falta de documentación en algunos módulos de \nameref{sec:grimoirelab}. Sin embargo, todos estos incidentes tienen un alto valor didáctico, y su documentación permitirá no volver a cometerlos en el futuro.
+%-------------------------------------------------------------------------------
+
+\section{Tiempo dedicado}
+
+El desarrollo de cada \emph{sprint} ha requerido un tiempo de trabajo distinto, dedicado a diferentes actividades. En esta sección se detalla el tiempo invertido en cada etapa:
+
+\begin{itemize}
+    \item El primer \emph{sprint}, al tratarse de una etapa de aprendizaje, se ha centrado exclusivamente en la investigación. Debido a que ya se contaba con un conocimiento inicial sobre la herramienta analizada, no ha supuesto un número excesivo de horas, finalizando este sprint a las tres semanas de iniciar el proyecto. Con una media diaria de dos horas, esta etapa ha supuesto un total de \textbf{42 horas}.
+    \item El segundo \emph{sprint} marca el comienzo del desarrollo del primer prototipo. Aunque principalmente se ha dedicado tiempo a la creación de componentes software, también se ha dedicado una pequeña parte del tiempo al estudio de diferentes herramientas que pudieran ayudar al desarrollo del prototipo. En total, la finalización de esta etapa ha supuesto dos semanas de investigación y cuatro de desarrollo, con una media de dos horas diarias, haciendo un total de \textbf{84 horas}.
+    \item El tercer \emph{sprint}, al partir de la base desarrollada en el sprint anterior, no debería haber requerido demasiado tiempo de trabajo. Sin embargo, los problemas que se detallan en el Capítulo~{\ref{problemas-encontrados}}, han incrementado el tiempo dedicado a esta etapa. Esta fase ha requerido utilizar dos semanas para investigación sobre cómo realizar la integración de GrimoireLab y OpenSearch con el proyecto, y cinco semanas de desarrollo para su implementación. Con una media diaria de dos horas, esta etapa se ha finalizado en \textbf{98 horas}.
+\end{itemize}
+
+En total, la finalización del proyecto ha requerido aproximadamente \textbf{224 horas} de trabajo, con mayor tiempo dedicado al desarrollo.
