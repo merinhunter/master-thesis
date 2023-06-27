@@ -53,8 +53,8 @@ Para este fin, se han desarrollado los siguientes modelos\footnote{Los campos no
 \end{figure}
 
 \begin{itemize}
-    \item \code{Order} -- Este modelo representa la solicitud hecha por un usuario. Está formado por un identificador UUID único, un \emph{string} representando la URL del repositorio git\index{Git} que se quiere analizar, y la fecha de creación de la instancia con un campo \emph{datetime}. (Figura~\ref{fig:grimoirebots_i_models})
-    \item \code{Report} -- Este modelo representa el resultado de procesar una solicitud hecha por un usuario. Está formado por un identificador UUID único, una referencia a la solicitud (\code{Order}) que originó su creación, la fecha de creación de la instancia con un campo \emph{datetime}, y un \emph{string} representando el procesamiento de la solicitud. (Figura~\ref{fig:grimoirebots_i_models})
+    \item \code{Order} -- Este modelo representa la solicitud hecha por un usuario. Está formado por un identificador UUID único, un \emph{string} representando la URL del repositorio git\index{Git} que se quiere analizar, y la fecha de creación de la instancia con un campo \code{datetime}. (Figura~\ref{fig:grimoirebots_i_models})
+    \item \code{Report} -- Este modelo representa el resultado de procesar una solicitud hecha por un usuario. Está formado por un identificador UUID único, una referencia a la solicitud (\code{Order}) que originó su creación, la fecha de creación de la instancia con un campo \code{datetime}, y un \emph{string} representando el procesamiento de la solicitud. (Figura~\ref{fig:grimoirebots_i_models})
 \end{itemize}
 
 También se han desarrollado los siguientes \emph{paths} en la API\index{API}:
@@ -74,7 +74,7 @@ También se han desarrollado los siguientes \emph{paths} en la API\index{API}:
 
 Adicionalmente, se ha creado una imagen \nameref{sec:docker}\index{Docker} que instala las dependencias del proyecto y lo lanza utilizando \nameref{sec:gunicorn}\index{Gunicorn} como servidor WSGI, y se ha incluido el uso de \nameref{sec:dependabot}\index{Dependabot} para la comprobación de cualquier actualización en las dependencias del proyecto y avisar de esto al equipo desarrollador.
 
-Por otra parte, en este \emph{sprint} también se ha desarrollado el cliente (o bot automático) de Grimoirebots, que es una aplicación escrita en \nameref{sec:python}\index{Python} que, haciendo uso de la librería \code{apiclient}, recoge periódicamente aquellas solicitudes pendientes de procesar y realiza un procesamiento básico de ellas. En esta parte del desarrollo aún no se había incluido \nameref{sec:grimoirelab}\index{GrimoireLab}, por lo que el procesamiento que el cliente hace de la solicitud es la construcción de un \emph{string} que contiene el identificador y el repositorio de la solicitud.
+Por otra parte, en este \emph{sprint} también se ha desarrollado el cliente (o bot automático) de Grimoirebots, que es una aplicación escrita en \nameref{sec:python}\index{Python} que, haciendo uso de la librería \code{api-client}, recoge periódicamente aquellas solicitudes pendientes de procesar y realiza un procesamiento básico de ellas. En esta parte del desarrollo aún no se había incluido \nameref{sec:grimoirelab}\index{GrimoireLab}, por lo que el procesamiento que el cliente hace de la solicitud es la construcción de un \emph{string} que contiene el identificador y el repositorio de la solicitud.
 
 Para ilustrar el comportamiento de este prototipo, se han creado las siguientes infografías:
 

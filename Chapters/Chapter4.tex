@@ -25,7 +25,7 @@ Las principales funcionalidades de este sistema son:
 
 \subsection{Modelos de datos} \label{sec:modelos-de-datos}
 
-Los distintos modelos que ofrece la API están dividos en dos grandes aplicaciones: \code{orders} y \code{reports}. Los modelos de la primera están principalmente enfocados en todos aquellos elementos necesarios para la creación de solicitudes de análisis; y los modelos de la segunda en el resultado de estos análisis. En la Figura~{\ref{fig:grimoirebots_models}} se puede encontrar una representación visual de estos modelos.
+Los distintos modelos que ofrece la API están divididos en dos grandes aplicaciones: \code{orders} y \code{reports}. Los modelos de la primera están principalmente enfocados en todos aquellos elementos necesarios para la creación de solicitudes de análisis; y los modelos de la segunda en el resultado de estos análisis. En la Figura~{\ref{fig:grimoirebots_models}} se puede encontrar una representación visual de estos modelos.
 
 \begin{figure}[ht]
     \centering
@@ -38,7 +38,7 @@ Los distintos modelos que ofrece la API están dividos en dos grandes aplicacion
 Los modelos de datos creados dentro de la aplicación \code{orders} son los siguientes:
 
 \begin{itemize}
-    \item \code{Order} -- Este modelo representa una solicitud de análisis. Por tanto, es el elemento raíz que el cliente de Grimoirebots solicita para llevar a cabo un análisis. Está compuesto por un identificador único, un título, y una fecha de creación, y es que el resto de elementos necesarios para el análsis están contenidos en otros modelos.
+    \item \code{Order} -- Este modelo representa una solicitud de análisis. Por tanto, es el elemento raíz que el cliente de Grimoirebots solicita para llevar a cabo un análisis. Está compuesto por un identificador único, un título, y una fecha de creación, y es que el resto de elementos necesarios para el análisis están contenidos en otros modelos.
     \item \code{Projects} -- Este modelo representa la lista de repositorios git solicitados para analizar. Lo compone un identificador único, una referencia al modelo \code{Order} del cual depende, y un \emph{array} de \emph{strings} con todas las URLs de repositorios git que se quieren analizar.
     \item \code{Setup} -- Este modelo representa la configuración de análisis para GrimoireLab, esto es, qué estudios se quieren incluir, las credenciales de OpenSearch, etc. Está compuesto por un identificador único y una referencia al modelo \code{Order} que lo originó. Al ser objeto de análisis de este proyecto únicamente los repositorios git, la configuración usada en cada análisis es la misma. Sin embargo, el modelo es bastante versátil, y permite la inclusión de nuevas opciones fácilmente.
 \end{itemize}
@@ -172,13 +172,13 @@ En la sección anterior ya se detallaron algunas de las entradas y salidas de la
 
 \subsection{Cliente automático}
 
-Otro de los componenetes de Grimoirebots es su sistema automático de lanzamiento de contenedores, o también conocido como cliente de Grimoirebots. Esta pieza se encarga de recoger periódicamente todas aquellas solicitudes de análisis pendientes de analizar, recoge sus ficheros de configuración y de repositorios, y lanza un contenedor Docker con GrimoireLab para realizar el análisis.
+Otro de los componentes de Grimoirebots es su sistema automático de lanzamiento de contenedores, o también conocido como cliente de Grimoirebots. Esta pieza se encarga de recoger periódicamente todas aquellas solicitudes de análisis pendientes de analizar, recoge sus ficheros de configuración y de repositorios, y lanza un contenedor Docker con GrimoireLab para realizar el análisis.
 
 Para ello, hace uso de la librería \code{api-client}, de la que hereda la clase \code{APIClient} para la construcción de un cliente API para Grimoirebots. En él tiene configurados todos los \emph{endpoints} de la API para poder interaccionar fácilmente con ellos.
 
 La forma en que lanza los contenedores de GrimoireLab es mediante el uso de la librería \code{docker}, la cual permite interaccionar con Docker. Debido a que el cliente necesita lanzar múltiples contenedores, y que cada uno de estos debe llevar a cabo un análisis diferente, el cliente utiliza diferentes volúmenes para almacenar los documentos de configuración de cada análisis.
 
-Además, estos contenedores necesitan tener visible el \emph{cluster} de OpenSearch, por lo que es necesario deplegarlos en el \emph{host}. Esta situación está descrita en el Capítulo~{\ref{problemas-encontrados}}, y es que el propio cliente está desplegado en forma de contenedor, por lo que hubo que configurar los ajustes de red del mismo para que fuera capaz de lanzar contenedores usando el mismo servicio que lo había levantado a él.
+Además, estos contenedores necesitan tener visible el \emph{cluster} de OpenSearch, por lo que es necesario desplegarlos en el \emph{host}. Esta situación está descrita en el Capítulo~{\ref{problemas-encontrados}}, y es que el propio cliente está desplegado en forma de contenedor, por lo que hubo que configurar los ajustes de red del mismo para que fuera capaz de lanzar contenedores usando el mismo servicio que lo había levantado a él.
 
 \subsection{Flujos de ejecución}
 
@@ -204,7 +204,7 @@ El cliente automático se encarga periódicamente de llevar a cabo peticiones de
 
 Por cada una de ellas, recoge los ficheros de configuración de GrimoireLab, realizando una petición de tipo GET a los \emph{paths} \code{/orders/\{id\}/projects.json} y \code{/orders/\{id\}/setup.cfg}, y lanza un contenedor Docker con esa configuración. Finalmente, genera un elemento de tipo \code{Report} realizando una petición POST al path \code{/reports/}.
 
-Al finalizar, el contenedor se apaga y vuelve a ejecutar unos segundos después gracias a la opción \code{restart} de Docker. El flujo descito puede encontarse en la Figura~{\ref{fig:grimoirebots_client_workflow}}
+Al finalizar, el contenedor se apaga y vuelve a ejecutar unos segundos después gracias a la opción \code{restart} de Docker. El flujo descrito puede encontrarse en la Figura~{\ref{fig:grimoirebots_client_workflow}}
 
 \begin{figure}[ht]
     \centering
@@ -214,7 +214,7 @@ Al finalizar, el contenedor se apaga y vuelve a ejecutar unos segundos después 
     \label{fig:grimoirebots_client_workflow}
 \end{figure}
 
-Estos flujos quedan bastante representados en el posterior Capítulo~{\ref{sec:ejemplo-de-uso}}, donde se lleva a cabo un caso de uso y se pasa por todas las estapas descritas.
+Estos flujos quedan bastante representados en el posterior Capítulo~{\ref{sec:ejemplo-de-uso}}, donde se lleva a cabo un caso de uso y se pasa por todas las etapas descritas.
 
 %-------------------------------------------------------------------------------
 
