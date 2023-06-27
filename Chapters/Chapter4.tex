@@ -6,13 +6,215 @@
 
 %-------------------------------------------------------------------------------
 
-\section{Especificaciones del sistema}
+\section{Descripción técnica del sistema}
 
-En esta sección se detallan las especificaciones del sistema resultante tras desarrollo del proyecto. Se detallan las prestaciones de este, así como los modelos de datos finales, y las entradas y salidas.
+En esta sección se detallan las especificaciones del sistema resultante tras el desarrollo del proyecto. Se detallan las prestaciones de este, así como los modelos de datos finales, y las entradas y salidas.
 
 \subsection{Definición y funcionalidades}
 
 \textbf{Grimoirebots} es el resultado del desarrollo expuesto en el Capítulo~{\ref{Chapter3}}. Se trata de un complejo sistema de análisis de repositorios git que, de forma automática, obtiene y genera datos sobre el desarrollo de \emph{software}, permitiendo su uso mediante la creación de métricas y gráficas.
+
+Las principales funcionalidades de este sistema son:
+
+\begin{itemize}
+    \item Ofrece una API desde la que crear, modificar, recoger y eliminar instancias de los distintos modelos que componen el sistema (Sección~{\ref{sec:modelos-de-datos}})
+    \item Acceso a una instancia personal de OpenSearch Dashboards, desde la que visualizar y crear métricas y gráficas con los datos obtenidos de los análisis
+    \item Cliente que, de forma automática, recoge todas las solicitudes pendiente de análisis y ejecuta un contenedor Docker con GrimoireLab para su análisis
+    \item Herramientas de despliegue automático de la aplicación, tales como ficheros de configuración para Docker Compose
+\end{itemize}
+
+\subsection{Modelos de datos} \label{sec:modelos-de-datos}
+
+Los distintos modelos que ofrece la API están dividos en dos grandes aplicaciones: \code{orders} y \code{reports}. Los modelos de la primera están principalmente enfocados en todos aquellos elementos necesarios para la creación de solicitudes de análisis; y los modelos de la segunda en el resultado de estos análisis. En la Figura~{\ref{fig:grimoirebots_models}} se puede encontrar una representación visual de estos modelos.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/grimoirebots_ii_models}
+    \decoRule
+    \caption[Grimoirebots (modelos)]{Modelos usados en Grimoirebots}
+    \label{fig:grimoirebots_models}
+\end{figure}
+
+Los modelos de datos creados dentro de la aplicación \code{orders} son los siguientes:
+
+\begin{itemize}
+    \item \code{Order} -- Este modelo representa una solicitud de análisis. Por tanto, es el elemento raíz que el cliente de Grimoirebots solicita para llevar a cabo un análisis. Está compuesto por un identificador único, un título, y una fecha de creación, y es que el resto de elementos necesarios para el análsis están contenidos en otros modelos.
+    \item \code{Projects} -- Este modelo representa la lista de repositorios git solicitados para analizar. Lo compone un identificador único, una referencia al modelo \code{Order} del cual depende, y un \emph{array} de \emph{strings} con todas las URLs de repositorios git que se quieren analizar.
+    \item \code{Setup} -- Este modelo representa la configuración de análisis para GrimoireLab, esto es, qué estudios se quieren incluir, las credenciales de OpenSearch, etc. Está compuesto por un identificador único y una referencia al modelo \code{Order} que lo originó. Al ser objeto de análisis de este proyecto únicamente los repositorios git, la configuración usada en cada análisis es la misma. Sin embargo, el modelo es bastante versátil, y permite la inclusión de nuevas opciones fácilmente.
+\end{itemize}
+
+Los modelos de datos creados dentro de la aplicación \code{reports} son los siguientes:
+
+\begin{itemize}
+    \item \code{Report} -- Este modelo representa el resultado de procesar una solicitud de análisis. La creación de una instancia de este modelo implica el comienzo de un análisis. Está compuesto por un identificador único, una referencia a la instancia \code{Order} que lo originó, la fecha de creación del mismo, y un pequeño texto donde se representa el procesamiento de la solicitud.
+\end{itemize}
+
+\subsection{Descripción de la API}
+
+En esta sección se van a detallar los distintos \emph{paths} que componen la API de Grimoirebots, sus entradas y su salidas. Igual que con los modelos, la API está dividida en dos grandes secciones: \code{orders} y \code{reports}.
+
+Los \emph{paths} disponibles para la aplicación \code{orders} son los siguientes (Figura~{\ref{fig:grimoirebots_api_orders}}):
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Figures/grimoirebots_api_orders}
+    \decoRule
+    \caption[Grimoirebots API (\code{orders})]{API de Grimoirebots para \code{orders}}
+    \label{fig:grimoirebots_api_orders}
+\end{figure}
+
+\begin{itemize}
+    \item El \emph{path} \code{/orders/} permite interaccionar con la colección completa de \code{Orders}. Permite realizar llamadas de tipo GET y POST para recoger todos los elementos de la colección y crear nuevos elementos en esta, respectivamente. La petición POST, además de crear un elemento de tipo \code{Order}, también crea un elemento de tipo \code{Setup} y \code{Project} y los asocia al elemento \code{Order} creado anteriormente. La petición GET no tiene parámetros de entrada, pero la petición POST necesita que se incluya el siguiente cuerpo en el \emph{payload} de la petición:
+\end{itemize}
+
+\begin{lstlisting}
+{
+    "title": "string",
+    "projects": {
+        "git": [
+            "string"
+        ]
+    },
+    "setup": {}
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item El \emph{path} \code{/orders/pending/} permite recoger aquellas instancias \code{Order} que no tienen una instancia \code{Report} asociada, o lo que es lo mismo, aquellas solicitudes de análisis que aún no han sido analizadas.
+    \item El \emph{path} \code{/orders/\{id\}/} permite interaccionar con una instancia \code{Order} en particular, identificada por el parámetro \code{id} en la solicitud. Permite realizar llamadas de tipo GET, PUT, PATCH y DELETE para recoger, actualizar, actualizar parcialmente y borrar una instancia, respectivamente. Las llamadas GET y DELETE no necesitan parámetros adicionales más allá del campo \code{id} incluido en la solicitud, pero las llamadas PUT y PATCH necesitan que se incluya el siguiente cuerpo en el \emph{payload} de la llamada:
+\end{itemize}
+
+\begin{lstlisting}
+{
+    "title": "string",
+    "projects": {
+        "git": [
+            "string"
+        ]
+    },
+    "setup": {}
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item Por último, los \emph{paths} \code{/orders/\{id\}/projects.json} y \code{/orders/\{id\}/setup.cfg} permiten recoger una representación de los modelos \code{Project} y \code{Setup}, respectivamente. Y se recalca lo de representación porque incluyen más datos de los que los modelos originalmente tienen. Esto es debido a que GrimoireLab necesita un formato específico para sus ficheros de configuración, y la API los devuelve prácticamente listos para ser utilizados por esta herramienta.
+\end{itemize}
+
+Los \emph{paths} disponibles para la aplicación \code{reports} son los siguientes (Figura~{\ref{fig:grimoirebots_api_reports}}):
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Figures/grimoirebots_api_reports}
+    \decoRule
+    \caption[Grimoirebots API (\code{reports})]{API de Grimoirebots para \code{reports}}
+    \label{fig:grimoirebots_api_reports}
+\end{figure}
+
+\begin{itemize}
+    \item El \emph{path} \code{/reports/} permite interaccionar con la colección completa de \code{Reports}. Permite realizar llamadas de tipo GET y POST para recoger todos los elementos de la colección y crear nuevos elementos en esta, respectivamente. La petición GET no tiene parámetros de entrada, pero la petición POST necesita que se incluya el siguiente cuerpo en el \emph{payload} de la petición:
+\end{itemize}
+
+\begin{lstlisting}
+{
+    "order": "string",
+    "report": "string"
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item El \emph{path} \code{/reports/\{id\}/} permite interaccionar con una instancia \code{Report} en particular, identificada por el parámetro \code{id} en la solicitud. Permite realizar llamadas de tipo GET, PUT, PATCH y DELETE para recoger, actualizar, actualizar parcialmente y borrar una instancia, respectivamente. Las llamadas GET y DELETE no necesitan parámetros adicionales más allá del campo \code{id} incluido en la solicitud, pero las llamadas PUT y PATCH necesitan que se incluya el siguiente cuerpo en el \emph{payload} de la llamada:
+\end{itemize}
+
+\begin{lstlisting}
+{
+    "order": "string",
+    "report": "string"
+}
+\end{lstlisting}
+
+\subsection{Entradas y salidas del sistema}
+
+En la sección anterior ya se detallaron algunas de las entradas y salidas de la API. Sin embargo, aquí se incluye esta información algo más estructurada.
+
+\subsubsection{Entradas del sistema}
+
+\begin{itemize}
+    \item Las peticiones de tipo GET y DELETE no tienen ningún tipo de entrada necesaria, más allá del campo \code{id} contenido en algunos \emph{paths}.
+    \item Las peticiones de tipo PUT, PATCH y POST necesitan incluir en el \emph{payload} de la petición una representación del modelo que quiere crear o actualizar (a excepción de PATCH, que permite introducir parcialmente esta información). Este cuerpo es diferente en función de si el elemento a crear / actualizar es de tipo \code{Order} o \code{Report}, siendo estos:
+\end{itemize}
+
+\begin{lstlisting}
+{
+    "title": "string",
+    "projects": {
+        "git": [
+            "string"
+        ]
+    },
+    "setup": {}
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+    "order": "string",
+    "report": "string"
+}
+\end{lstlisting}
+
+\subsubsection{Salidas del sistema}
+
+\begin{itemize}
+    \item Las peticiones de tipo GET, PUT y PATCH responden con un código 200 indicando que la solicitud ha sido un éxito, y con la representación del modelo en el \emph{payload}.
+    \item Las peticiones de tipo POST responden con un código 201 indicando que el elemento ha sido creado, e incluyen una representación de este en el \emph{payload}.
+    \item Las peticiones de tipo DELETE responden con un código 204, indicando que la petición no tiene contenido en el \emph{payload}.
+\end{itemize}
+
+\subsection{Cliente automático}
+
+Otro de los componenetes de Grimoirebots es su sistema automático de lanzamiento de contenedores, o también conocido como cliente de Grimoirebots. Esta pieza se encarga de recoger periódicamente todas aquellas solicitudes de análisis pendientes de analizar, recoge sus ficheros de configuración y de repositorios, y lanza un contenedor Docker con GrimoireLab para realizar el análisis.
+
+Para ello, hace uso de la librería \code{api-client}, de la que hereda la clase \code{APIClient} para la construcción de un cliente API para Grimoirebots. En él tiene configurados todos los \emph{endpoints} de la API para poder interaccionar fácilmente con ellos.
+
+La forma en que lanza los contenedores de GrimoireLab es mediante el uso de la librería \code{docker}, la cual permite interaccionar con Docker. Debido a que el cliente necesita lanzar múltiples contenedores, y que cada uno de estos debe llevar a cabo un análisis diferente, el cliente utiliza diferentes volúmenes para almacenar los documentos de configuración de cada análisis.
+
+Además, estos contenedores necesitan tener visible el \emph{cluster} de OpenSearch, por lo que es necesario deplegarlos en el \emph{host}. Esta situación está descrita en el Capítulo~{\ref{problemas-encontrados}}, y es que el propio cliente está desplegado en forma de contenedor, por lo que hubo que configurar los ajustes de red del mismo para que fuera capaz de lanzar contenedores usando el mismo servicio que lo había levantado a él.
+
+\subsection{Flujos de ejecución}
+
+Dentro de la plataforma se diferencian dos flujos de ejecución diferentes: el que el usuario lleva a cabo para solicitar un análisis y visualizar los datos, y el que realiza el cliente de Grimoirebots para lograr este análisis. En esta sección se repasará cada uno de ellos.
+
+\subsubsection{Flujo de ejecución del usuario}
+
+Un usuario de Grimoirebots lo primero que realiza es una petición de tipo POST a la API, concretamente al path \code{/orders/}, indicando en el \emph{payload} de la petición los requisitos de este. (Figura~{\ref{fig:grimoirebots_user_workflow}})
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/grimoirebots_frontend}
+    \decoRule
+    \caption[Grimoirebots (flujo del usuario)]{Flujo de ejecución de un usuario en Grimoirebots}
+    \label{fig:grimoirebots_user_workflow}
+\end{figure}
+
+A partir de aquí, el análisis se llevaría a cabo, y el usuario podría acceder a los datos del mismo usando OpenSearch Dashboards, el cual estaría disponible a través de un navegador web.
+
+\subsubsection{Flujo de ejecución del cliente}
+
+El cliente automático se encarga periódicamente de llevar a cabo peticiones de tipo GET al path \code{/orders/pending/}, de donde recoge todas aquellas solicitudes pendiente de análisis.
+
+Por cada una de ellas, recoge los ficheros de configuración de GrimoireLab, realizando una petición de tipo GET a los \emph{paths} \code{/orders/\{id\}/projects.json} y \code{/orders/\{id\}/setup.cfg}, y lanza un contenedor Docker con esa configuración. Finalmente, genera un elemento de tipo \code{Report} realizando una petición POST al path \code{/reports/}.
+
+Al finalizar, el contenedor se apaga y vuelve a ejecutar unos segundos después gracias a la opción \code{restart} de Docker. El flujo descito puede encontarse en la Figura~{\ref{fig:grimoirebots_client_workflow}}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/grimoirebots_ii_backend}
+    \decoRule
+    \caption[Grimoirebots (flujo del cliente)]{Flujo de ejecución del cliente en Grimoirebots}
+    \label{fig:grimoirebots_client_workflow}
+\end{figure}
+
+Estos flujos quedan bastante representados en el posterior Capítulo~{\ref{sec:ejemplo-de-uso}}, donde se lleva a cabo un caso de uso y se pasa por todas las estapas descritas.
 
 %-------------------------------------------------------------------------------
 
@@ -153,7 +355,7 @@ Accediendo a la dirección \code{http://localhost:5601} usando un navegador web,
     \label{fig:opensearch-dashboards-login}
 \end{figure}
 
-\section{Ejemplo de uso}
+\section{Ejemplo de uso} \label{sec:ejemplo-de-uso}
 
 Para ilustrar el funcionamiento de Grimoirebots, en esta sección se va a mostrar un caso de uso en el que un usuario quiere analizar una serie de repositorios git\index{Git}, y después visualizar los datos generados en este análisis.
 
